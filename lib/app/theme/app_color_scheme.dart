@@ -1,0 +1,14 @@
+import 'package:flutter/material.dart';
+import 'package:kotik/app/theme/colors.dart';
+
+const appColorScheme = ColorScheme.light(
+  primary: primaryColor,
+  onPrimary: secondaryWhiteTextColor,
+  secondary: navColor,
+  onSecondary: secondaryWhiteTextColor,
+  surface: background,
+  onSurface: mainTextColor,
+  error: Color.fromARGB(255, 186, 26, 26),
+  onError: secondaryWhiteTextColor,
+  outline: borderColor,
+);
