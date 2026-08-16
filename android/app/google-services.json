@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "983503298942",
+    "project_id": "koteki-480dc",
+    "storage_bucket": "koteki-480dc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:983503298942:android:70ff3dff068887fc5dd32f",
+        "android_client_info": {
+          "package_name": "com.example.kotik"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABkFS49IZjGHsW438EaK9Dx0zHto1dd5c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
