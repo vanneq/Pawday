@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kotik/app/theme/colors.dart';
-import 'package:kotik/app/theme/fonts.dart';
+import 'package:kotik/core/app/theme/colors.dart';
+import 'package:kotik/core/app/theme/fonts.dart';
 
 TextTheme get appTextTheme => GoogleFonts.nunitoTextTheme().copyWith(
   displayLarge: Fonts.titleLargeFont.copyWith(color: mainTextColor),

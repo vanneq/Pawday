@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kotik/app/theme/colors.dart';
+import 'package:kotik/core/app/theme/colors.dart';
 
 const appColorScheme = ColorScheme.light(
   primary: primaryColor,

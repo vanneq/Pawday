@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kotik/app/theme/app_color_scheme.dart';
-import 'package:kotik/app/theme/app_text_theme.dart';
-import 'package:kotik/app/theme/colors.dart';
-import 'package:kotik/app/theme/fonts.dart';
+import 'package:kotik/core/app/theme/app_color_scheme.dart';
+import 'package:kotik/core/app/theme/app_text_theme.dart';
+import 'package:kotik/core/app/theme/colors.dart';
+import 'package:kotik/core/app/theme/fonts.dart';
 
 class AppTheme {
   static ThemeData get light => ThemeData(
