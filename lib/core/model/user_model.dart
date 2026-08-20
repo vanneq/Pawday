@@ -3,21 +3,20 @@ part 'user_model.freezed.dart';
 part 'user_model.g.dart';
 
 @freezed
-abstract class SignInParams with _$SignInParams {
-  const factory SignInParams({
+abstract class UserModel with _$UserModel {
+  const factory UserModel({
+    required String uid,
     required String email,
-    required String password,
-  }) = _SignInParams;
-  factory SignInParams.fromJson(Map<String, dynamic> json) =>
-      _$SignInParamsFromJson(json);
+    required bool emailVerified,
+  }) = _UserModel;
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
 }
 
 @freezed
-abstract class SignUpParams with _$SignUpParams {
-  const factory SignUpParams({
-    required String email,
-    required String password,
-  }) = _SignUpParams;
-  factory SignUpParams.fromJson(Map<String, dynamic> json) =>
-      _$SignUpParamsFromJson(json);
+abstract class AuthParams with _$AuthParams {
+  const factory AuthParams({required String email, required String password}) =
+      _AuthParams;
+  factory AuthParams.fromJson(Map<String, dynamic> json) =>
+      _$AuthParamsFromJson(json);
 }

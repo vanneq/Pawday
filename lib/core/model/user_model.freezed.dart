@@ -13,42 +13,42 @@ part of 'user_model.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$SignInParams {
+mixin _$UserModel {
 
- String get email; String get password;
-/// Create a copy of SignInParams
+ String get uid; String get email; bool get emailVerified;
+/// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$SignInParamsCopyWith<SignInParams> get copyWith => _$SignInParamsCopyWithImpl<SignInParams>(this as SignInParams, _$identity);
+$UserModelCopyWith<UserModel> get copyWith => _$UserModelCopyWithImpl<UserModel>(this as UserModel, _$identity);
 
-  /// Serializes this SignInParams to a JSON map.
+  /// Serializes this UserModel to a JSON map.
   Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SignInParams&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserModel&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.email, email) || other.email == email)&&(identical(other.emailVerified, emailVerified) || other.emailVerified == emailVerified));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,email,password);
+int get hashCode => Object.hash(runtimeType,uid,email,emailVerified);
 
 @override
 String toString() {
-  return 'SignInParams(email: $email, password: $password)';
+  return 'UserModel(uid: $uid, email: $email, emailVerified: $emailVerified)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $SignInParamsCopyWith<$Res>  {
-  factory $SignInParamsCopyWith(SignInParams value, $Res Function(SignInParams) _then) = _$SignInParamsCopyWithImpl;
+abstract mixin class $UserModelCopyWith<$Res>  {
+  factory $UserModelCopyWith(UserModel value, $Res Function(UserModel) _then) = _$UserModelCopyWithImpl;
 @useResult
 $Res call({
- String email, String password
+ String uid, String email, bool emailVerified
 });
 
 
@@ -56,28 +56,29 @@ $Res call({
 
 }
 /// @nodoc
-class _$SignInParamsCopyWithImpl<$Res>
-    implements $SignInParamsCopyWith<$Res> {
-  _$SignInParamsCopyWithImpl(this._self, this._then);
+class _$UserModelCopyWithImpl<$Res>
+    implements $UserModelCopyWith<$Res> {
+  _$UserModelCopyWithImpl(this._self, this._then);
 
-  final SignInParams _self;
-  final $Res Function(SignInParams) _then;
+  final UserModel _self;
+  final $Res Function(UserModel) _then;
 
-/// Create a copy of SignInParams
+/// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? email = null,Object? password = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? uid = null,Object? email = null,Object? emailVerified = null,}) {
   return _then(_self.copyWith(
-email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
-as String,
+uid: null == uid ? _self.uid : uid // ignore: cast_nullable_to_non_nullable
+as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,emailVerified: null == emailVerified ? _self.emailVerified : emailVerified // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
 }
 
 
-/// Adds pattern-matching-related methods to [SignInParams].
-extension SignInParamsPatterns on SignInParams {
+/// Adds pattern-matching-related methods to [UserModel].
+extension UserModelPatterns on UserModel {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -90,10 +91,10 @@ extension SignInParamsPatterns on SignInParams {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SignInParams value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _UserModel value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _SignInParams() when $default != null:
+case _UserModel() when $default != null:
 return $default(_that);case _:
   return orElse();
 
@@ -112,10 +113,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SignInParams value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _UserModel value)  $default,){
 final _that = this;
 switch (_that) {
-case _SignInParams():
+case _UserModel():
 return $default(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -133,10 +134,278 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SignInParams value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _UserModel value)?  $default,){
 final _that = this;
 switch (_that) {
-case _SignInParams() when $default != null:
+case _UserModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String uid,  String email,  bool emailVerified)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _UserModel() when $default != null:
+return $default(_that.uid,_that.email,_that.emailVerified);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String uid,  String email,  bool emailVerified)  $default,) {final _that = this;
+switch (_that) {
+case _UserModel():
+return $default(_that.uid,_that.email,_that.emailVerified);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String uid,  String email,  bool emailVerified)?  $default,) {final _that = this;
+switch (_that) {
+case _UserModel() when $default != null:
+return $default(_that.uid,_that.email,_that.emailVerified);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _UserModel implements UserModel {
+  const _UserModel({required this.uid, required this.email, required this.emailVerified});
+  factory _UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
+
+@override final  String uid;
+@override final  String email;
+@override final  bool emailVerified;
+
+/// Create a copy of UserModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$UserModelCopyWith<_UserModel> get copyWith => __$UserModelCopyWithImpl<_UserModel>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$UserModelToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserModel&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.email, email) || other.email == email)&&(identical(other.emailVerified, emailVerified) || other.emailVerified == emailVerified));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,uid,email,emailVerified);
+
+@override
+String toString() {
+  return 'UserModel(uid: $uid, email: $email, emailVerified: $emailVerified)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$UserModelCopyWith<$Res> implements $UserModelCopyWith<$Res> {
+  factory _$UserModelCopyWith(_UserModel value, $Res Function(_UserModel) _then) = __$UserModelCopyWithImpl;
+@override @useResult
+$Res call({
+ String uid, String email, bool emailVerified
+});
+
+
+
+
+}
+/// @nodoc
+class __$UserModelCopyWithImpl<$Res>
+    implements _$UserModelCopyWith<$Res> {
+  __$UserModelCopyWithImpl(this._self, this._then);
+
+  final _UserModel _self;
+  final $Res Function(_UserModel) _then;
+
+/// Create a copy of UserModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? uid = null,Object? email = null,Object? emailVerified = null,}) {
+  return _then(_UserModel(
+uid: null == uid ? _self.uid : uid // ignore: cast_nullable_to_non_nullable
+as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,emailVerified: null == emailVerified ? _self.emailVerified : emailVerified // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$AuthParams {
+
+ String get email; String get password;
+/// Create a copy of AuthParams
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AuthParamsCopyWith<AuthParams> get copyWith => _$AuthParamsCopyWithImpl<AuthParams>(this as AuthParams, _$identity);
+
+  /// Serializes this AuthParams to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthParams&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,email,password);
+
+@override
+String toString() {
+  return 'AuthParams(email: $email, password: $password)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $AuthParamsCopyWith<$Res>  {
+  factory $AuthParamsCopyWith(AuthParams value, $Res Function(AuthParams) _then) = _$AuthParamsCopyWithImpl;
+@useResult
+$Res call({
+ String email, String password
+});
+
+
+
+
+}
+/// @nodoc
+class _$AuthParamsCopyWithImpl<$Res>
+    implements $AuthParamsCopyWith<$Res> {
+  _$AuthParamsCopyWithImpl(this._self, this._then);
+
+  final AuthParams _self;
+  final $Res Function(AuthParams) _then;
+
+/// Create a copy of AuthParams
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? email = null,Object? password = null,}) {
+  return _then(_self.copyWith(
+email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [AuthParams].
+extension AuthParamsPatterns on AuthParams {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _AuthParams value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _AuthParams() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _AuthParams value)  $default,){
+final _that = this;
+switch (_that) {
+case _AuthParams():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _AuthParams value)?  $default,){
+final _that = this;
+switch (_that) {
+case _AuthParams() when $default != null:
 return $default(_that);case _:
   return null;
 
@@ -156,7 +425,7 @@ return $default(_that);case _:
 
 @optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String email,  String password)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _SignInParams() when $default != null:
+case _AuthParams() when $default != null:
 return $default(_that.email,_that.password);case _:
   return orElse();
 
@@ -177,7 +446,7 @@ return $default(_that.email,_that.password);case _:
 
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String email,  String password)  $default,) {final _that = this;
 switch (_that) {
-case _SignInParams():
+case _AuthParams():
 return $default(_that.email,_that.password);case _:
   throw StateError('Unexpected subclass');
 
@@ -197,7 +466,7 @@ return $default(_that.email,_that.password);case _:
 
 @optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String email,  String password)?  $default,) {final _that = this;
 switch (_that) {
-case _SignInParams() when $default != null:
+case _AuthParams() when $default != null:
 return $default(_that.email,_that.password);case _:
   return null;
 
@@ -209,27 +478,27 @@ return $default(_that.email,_that.password);case _:
 /// @nodoc
 @JsonSerializable()
 
-class _SignInParams implements SignInParams {
-  const _SignInParams({required this.email, required this.password});
-  factory _SignInParams.fromJson(Map<String, dynamic> json) => _$SignInParamsFromJson(json);
+class _AuthParams implements AuthParams {
+  const _AuthParams({required this.email, required this.password});
+  factory _AuthParams.fromJson(Map<String, dynamic> json) => _$AuthParamsFromJson(json);
 
 @override final  String email;
 @override final  String password;
 
-/// Create a copy of SignInParams
+/// Create a copy of AuthParams
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$SignInParamsCopyWith<_SignInParams> get copyWith => __$SignInParamsCopyWithImpl<_SignInParams>(this, _$identity);
+_$AuthParamsCopyWith<_AuthParams> get copyWith => __$AuthParamsCopyWithImpl<_AuthParams>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$SignInParamsToJson(this, );
+  return _$AuthParamsToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SignInParams&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AuthParams&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -238,15 +507,15 @@ int get hashCode => Object.hash(runtimeType,email,password);
 
 @override
 String toString() {
-  return 'SignInParams(email: $email, password: $password)';
+  return 'AuthParams(email: $email, password: $password)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$SignInParamsCopyWith<$Res> implements $SignInParamsCopyWith<$Res> {
-  factory _$SignInParamsCopyWith(_SignInParams value, $Res Function(_SignInParams) _then) = __$SignInParamsCopyWithImpl;
+abstract mixin class _$AuthParamsCopyWith<$Res> implements $AuthParamsCopyWith<$Res> {
+  factory _$AuthParamsCopyWith(_AuthParams value, $Res Function(_AuthParams) _then) = __$AuthParamsCopyWithImpl;
 @override @useResult
 $Res call({
  String email, String password
@@ -257,283 +526,17 @@ $Res call({
 
 }
 /// @nodoc
-class __$SignInParamsCopyWithImpl<$Res>
-    implements _$SignInParamsCopyWith<$Res> {
-  __$SignInParamsCopyWithImpl(this._self, this._then);
+class __$AuthParamsCopyWithImpl<$Res>
+    implements _$AuthParamsCopyWith<$Res> {
+  __$AuthParamsCopyWithImpl(this._self, this._then);
 
-  final _SignInParams _self;
-  final $Res Function(_SignInParams) _then;
+  final _AuthParams _self;
+  final $Res Function(_AuthParams) _then;
 
-/// Create a copy of SignInParams
+/// Create a copy of AuthParams
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? email = null,Object? password = null,}) {
-  return _then(_SignInParams(
-email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
-as String,
-  ));
-}
-
-
-}
-
-
-/// @nodoc
-mixin _$SignUpParams {
-
- String get email; String get password;
-/// Create a copy of SignUpParams
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$SignUpParamsCopyWith<SignUpParams> get copyWith => _$SignUpParamsCopyWithImpl<SignUpParams>(this as SignUpParams, _$identity);
-
-  /// Serializes this SignUpParams to a JSON map.
-  Map<String, dynamic> toJson();
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SignUpParams&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password));
-}
-
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,email,password);
-
-@override
-String toString() {
-  return 'SignUpParams(email: $email, password: $password)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class $SignUpParamsCopyWith<$Res>  {
-  factory $SignUpParamsCopyWith(SignUpParams value, $Res Function(SignUpParams) _then) = _$SignUpParamsCopyWithImpl;
-@useResult
-$Res call({
- String email, String password
-});
-
-
-
-
-}
-/// @nodoc
-class _$SignUpParamsCopyWithImpl<$Res>
-    implements $SignUpParamsCopyWith<$Res> {
-  _$SignUpParamsCopyWithImpl(this._self, this._then);
-
-  final SignUpParams _self;
-  final $Res Function(SignUpParams) _then;
-
-/// Create a copy of SignUpParams
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? email = null,Object? password = null,}) {
-  return _then(_self.copyWith(
-email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
-as String,
-  ));
-}
-
-}
-
-
-/// Adds pattern-matching-related methods to [SignUpParams].
-extension SignUpParamsPatterns on SignUpParams {
-/// A variant of `map` that fallback to returning `orElse`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
-
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SignUpParams value)?  $default,{required TResult orElse(),}){
-final _that = this;
-switch (_that) {
-case _SignUpParams() when $default != null:
-return $default(_that);case _:
-  return orElse();
-
-}
-}
-/// A `switch`-like method, using callbacks.
-///
-/// Callbacks receives the raw object, upcasted.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case final Subclass2 value:
-///     return ...;
-/// }
-/// ```
-
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SignUpParams value)  $default,){
-final _that = this;
-switch (_that) {
-case _SignUpParams():
-return $default(_that);case _:
-  throw StateError('Unexpected subclass');
-
-}
-}
-/// A variant of `map` that fallback to returning `null`.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case final Subclass value:
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
-
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SignUpParams value)?  $default,){
-final _that = this;
-switch (_that) {
-case _SignUpParams() when $default != null:
-return $default(_that);case _:
-  return null;
-
-}
-}
-/// A variant of `when` that fallback to an `orElse` callback.
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return orElse();
-/// }
-/// ```
-
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String email,  String password)?  $default,{required TResult orElse(),}) {final _that = this;
-switch (_that) {
-case _SignUpParams() when $default != null:
-return $default(_that.email,_that.password);case _:
-  return orElse();
-
-}
-}
-/// A `switch`-like method, using callbacks.
-///
-/// As opposed to `map`, this offers destructuring.
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case Subclass2(:final field2):
-///     return ...;
-/// }
-/// ```
-
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String email,  String password)  $default,) {final _that = this;
-switch (_that) {
-case _SignUpParams():
-return $default(_that.email,_that.password);case _:
-  throw StateError('Unexpected subclass');
-
-}
-}
-/// A variant of `when` that fallback to returning `null`
-///
-/// It is equivalent to doing:
-/// ```dart
-/// switch (sealedClass) {
-///   case Subclass(:final field):
-///     return ...;
-///   case _:
-///     return null;
-/// }
-/// ```
-
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String email,  String password)?  $default,) {final _that = this;
-switch (_that) {
-case _SignUpParams() when $default != null:
-return $default(_that.email,_that.password);case _:
-  return null;
-
-}
-}
-
-}
-
-/// @nodoc
-@JsonSerializable()
-
-class _SignUpParams implements SignUpParams {
-  const _SignUpParams({required this.email, required this.password});
-  factory _SignUpParams.fromJson(Map<String, dynamic> json) => _$SignUpParamsFromJson(json);
-
-@override final  String email;
-@override final  String password;
-
-/// Create a copy of SignUpParams
-/// with the given fields replaced by the non-null parameter values.
-@override @JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$SignUpParamsCopyWith<_SignUpParams> get copyWith => __$SignUpParamsCopyWithImpl<_SignUpParams>(this, _$identity);
-
-@override
-Map<String, dynamic> toJson() {
-  return _$SignUpParamsToJson(this, );
-}
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SignUpParams&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password));
-}
-
-@JsonKey(includeFromJson: false, includeToJson: false)
-@override
-int get hashCode => Object.hash(runtimeType,email,password);
-
-@override
-String toString() {
-  return 'SignUpParams(email: $email, password: $password)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class _$SignUpParamsCopyWith<$Res> implements $SignUpParamsCopyWith<$Res> {
-  factory _$SignUpParamsCopyWith(_SignUpParams value, $Res Function(_SignUpParams) _then) = __$SignUpParamsCopyWithImpl;
-@override @useResult
-$Res call({
- String email, String password
-});
-
-
-
-
-}
-/// @nodoc
-class __$SignUpParamsCopyWithImpl<$Res>
-    implements _$SignUpParamsCopyWith<$Res> {
-  __$SignUpParamsCopyWithImpl(this._self, this._then);
-
-  final _SignUpParams _self;
-  final $Res Function(_SignUpParams) _then;
-
-/// Create a copy of SignUpParams
-/// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? email = null,Object? password = null,}) {
-  return _then(_SignUpParams(
+  return _then(_AuthParams(
 email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
 as String,
