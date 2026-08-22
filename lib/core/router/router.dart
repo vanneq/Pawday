@@ -1,9 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kotik/core/navigation/nav_bar.dart';
 import 'package:kotik/core/providers/auth_provider.dart';
 import 'package:kotik/features/auth/presentation/pages/login_page.dart';
 import 'package:kotik/features/auth/presentation/pages/register_page.dart';
+import 'package:kotik/features/dairy/presentation/pages/dairy_page.dart';
 import 'package:kotik/features/main/presentation/pages/main_page.dart';
+import 'package:kotik/features/profile/presentation/pages/profile_page.dart';
 
 final router = Provider<GoRouter>((ref) {
   final authState = ref.watch(firebaseAuthProvider);
@@ -27,9 +30,25 @@ final router = Provider<GoRouter>((ref) {
         path: '/login',
         pageBuilder: (context, state) => NoTransitionPage(child: LoginPage()),
       ),
-      GoRoute(
-        path: '/main',
-        pageBuilder: (context, state) => NoTransitionPage(child: MainPage()),
+      ShellRoute(
+        builder: (context, state, child) => NavBar(child: child),
+        routes: [
+          GoRoute(
+            path: '/main',
+            pageBuilder: (context, state) =>
+                NoTransitionPage(child: MainPage()),
+          ),
+          GoRoute(
+            path: '/diary',
+            pageBuilder: (context, state) =>
+                const NoTransitionPage(child: DairyPage()),
+          ),
+          GoRoute(
+            path: '/profile',
+            pageBuilder: (context, state) =>
+                const NoTransitionPage(child: ProfilePage()),
+          ),
+        ],
       ),
     ],
   );
