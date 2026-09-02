@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:kotik/core/model/cat/cat_model.dart';
 part 'user_model.freezed.dart';
 part 'user_model.g.dart';
 
@@ -7,7 +8,9 @@ abstract class UserModel with _$UserModel {
   const factory UserModel({
     required String uid,
     required String email,
-    required bool emailVerified,
+    required DateTime createdAt,
+    CatModel? activeCat,
+    List<CatModel>? allCats,
   }) = _UserModel;
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);

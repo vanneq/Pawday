@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserModel {
 
- String get uid; String get email; bool get emailVerified;
+ String get uid; String get email; DateTime get createdAt; CatModel? get activeCat; List<CatModel>? get allCats;
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $UserModelCopyWith<UserModel> get copyWith => _$UserModelCopyWithImpl<UserModel>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserModel&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.email, email) || other.email == email)&&(identical(other.emailVerified, emailVerified) || other.emailVerified == emailVerified));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserModel&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.email, email) || other.email == email)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.activeCat, activeCat) || other.activeCat == activeCat)&&const DeepCollectionEquality().equals(other.allCats, allCats));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,uid,email,emailVerified);
+int get hashCode => Object.hash(runtimeType,uid,email,createdAt,activeCat,const DeepCollectionEquality().hash(allCats));
 
 @override
 String toString() {
-  return 'UserModel(uid: $uid, email: $email, emailVerified: $emailVerified)';
+  return 'UserModel(uid: $uid, email: $email, createdAt: $createdAt, activeCat: $activeCat, allCats: $allCats)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $UserModelCopyWith<$Res>  {
   factory $UserModelCopyWith(UserModel value, $Res Function(UserModel) _then) = _$UserModelCopyWithImpl;
 @useResult
 $Res call({
- String uid, String email, bool emailVerified
+ String uid, String email, DateTime createdAt, CatModel? activeCat, List<CatModel>? allCats
 });
 
 
-
+$CatModelCopyWith<$Res>? get activeCat;
 
 }
 /// @nodoc
@@ -65,15 +65,29 @@ class _$UserModelCopyWithImpl<$Res>
 
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? uid = null,Object? email = null,Object? emailVerified = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? uid = null,Object? email = null,Object? createdAt = null,Object? activeCat = freezed,Object? allCats = freezed,}) {
   return _then(_self.copyWith(
 uid: null == uid ? _self.uid : uid // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,emailVerified: null == emailVerified ? _self.emailVerified : emailVerified // ignore: cast_nullable_to_non_nullable
-as bool,
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,activeCat: freezed == activeCat ? _self.activeCat : activeCat // ignore: cast_nullable_to_non_nullable
+as CatModel?,allCats: freezed == allCats ? _self.allCats : allCats // ignore: cast_nullable_to_non_nullable
+as List<CatModel>?,
   ));
 }
+/// Create a copy of UserModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CatModelCopyWith<$Res>? get activeCat {
+    if (_self.activeCat == null) {
+    return null;
+  }
 
+  return $CatModelCopyWith<$Res>(_self.activeCat!, (value) {
+    return _then(_self.copyWith(activeCat: value));
+  });
+}
 }
 
 
@@ -155,10 +169,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String uid,  String email,  bool emailVerified)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String uid,  String email,  DateTime createdAt,  CatModel? activeCat,  List<CatModel>? allCats)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserModel() when $default != null:
-return $default(_that.uid,_that.email,_that.emailVerified);case _:
+return $default(_that.uid,_that.email,_that.createdAt,_that.activeCat,_that.allCats);case _:
   return orElse();
 
 }
@@ -176,10 +190,10 @@ return $default(_that.uid,_that.email,_that.emailVerified);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String uid,  String email,  bool emailVerified)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String uid,  String email,  DateTime createdAt,  CatModel? activeCat,  List<CatModel>? allCats)  $default,) {final _that = this;
 switch (_that) {
 case _UserModel():
-return $default(_that.uid,_that.email,_that.emailVerified);case _:
+return $default(_that.uid,_that.email,_that.createdAt,_that.activeCat,_that.allCats);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +210,10 @@ return $default(_that.uid,_that.email,_that.emailVerified);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String uid,  String email,  bool emailVerified)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String uid,  String email,  DateTime createdAt,  CatModel? activeCat,  List<CatModel>? allCats)?  $default,) {final _that = this;
 switch (_that) {
 case _UserModel() when $default != null:
-return $default(_that.uid,_that.email,_that.emailVerified);case _:
+return $default(_that.uid,_that.email,_that.createdAt,_that.activeCat,_that.allCats);case _:
   return null;
 
 }
@@ -211,12 +225,22 @@ return $default(_that.uid,_that.email,_that.emailVerified);case _:
 @JsonSerializable()
 
 class _UserModel implements UserModel {
-  const _UserModel({required this.uid, required this.email, required this.emailVerified});
+  const _UserModel({required this.uid, required this.email, required this.createdAt, this.activeCat, final  List<CatModel>? allCats}): _allCats = allCats;
   factory _UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
 
 @override final  String uid;
 @override final  String email;
-@override final  bool emailVerified;
+@override final  DateTime createdAt;
+@override final  CatModel? activeCat;
+ final  List<CatModel>? _allCats;
+@override List<CatModel>? get allCats {
+  final value = _allCats;
+  if (value == null) return null;
+  if (_allCats is EqualUnmodifiableListView) return _allCats;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +255,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserModel&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.email, email) || other.email == email)&&(identical(other.emailVerified, emailVerified) || other.emailVerified == emailVerified));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserModel&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.email, email) || other.email == email)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.activeCat, activeCat) || other.activeCat == activeCat)&&const DeepCollectionEquality().equals(other._allCats, _allCats));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,uid,email,emailVerified);
+int get hashCode => Object.hash(runtimeType,uid,email,createdAt,activeCat,const DeepCollectionEquality().hash(_allCats));
 
 @override
 String toString() {
-  return 'UserModel(uid: $uid, email: $email, emailVerified: $emailVerified)';
+  return 'UserModel(uid: $uid, email: $email, createdAt: $createdAt, activeCat: $activeCat, allCats: $allCats)';
 }
 
 
@@ -251,11 +275,11 @@ abstract mixin class _$UserModelCopyWith<$Res> implements $UserModelCopyWith<$Re
   factory _$UserModelCopyWith(_UserModel value, $Res Function(_UserModel) _then) = __$UserModelCopyWithImpl;
 @override @useResult
 $Res call({
- String uid, String email, bool emailVerified
+ String uid, String email, DateTime createdAt, CatModel? activeCat, List<CatModel>? allCats
 });
 
 
-
+@override $CatModelCopyWith<$Res>? get activeCat;
 
 }
 /// @nodoc
@@ -268,16 +292,30 @@ class __$UserModelCopyWithImpl<$Res>
 
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? uid = null,Object? email = null,Object? emailVerified = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? uid = null,Object? email = null,Object? createdAt = null,Object? activeCat = freezed,Object? allCats = freezed,}) {
   return _then(_UserModel(
 uid: null == uid ? _self.uid : uid // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,emailVerified: null == emailVerified ? _self.emailVerified : emailVerified // ignore: cast_nullable_to_non_nullable
-as bool,
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,activeCat: freezed == activeCat ? _self.activeCat : activeCat // ignore: cast_nullable_to_non_nullable
+as CatModel?,allCats: freezed == allCats ? _self._allCats : allCats // ignore: cast_nullable_to_non_nullable
+as List<CatModel>?,
   ));
 }
 
+/// Create a copy of UserModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CatModelCopyWith<$Res>? get activeCat {
+    if (_self.activeCat == null) {
+    return null;
+  }
 
+  return $CatModelCopyWith<$Res>(_self.activeCat!, (value) {
+    return _then(_self.copyWith(activeCat: value));
+  });
+}
 }
 
 

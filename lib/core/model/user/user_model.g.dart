@@ -9,14 +9,22 @@ part of 'user_model.dart';
 _UserModel _$UserModelFromJson(Map<String, dynamic> json) => _UserModel(
   uid: json['uid'] as String,
   email: json['email'] as String,
-  emailVerified: json['emailVerified'] as bool,
+  createdAt: DateTime.parse(json['createdAt'] as String),
+  activeCat: json['activeCat'] == null
+      ? null
+      : CatModel.fromJson(json['activeCat'] as Map<String, dynamic>),
+  allCats: (json['allCats'] as List<dynamic>?)
+      ?.map((e) => CatModel.fromJson(e as Map<String, dynamic>))
+      .toList(),
 );
 
 Map<String, dynamic> _$UserModelToJson(_UserModel instance) =>
     <String, dynamic>{
       'uid': instance.uid,
       'email': instance.email,
-      'emailVerified': instance.emailVerified,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'activeCat': instance.activeCat,
+      'allCats': instance.allCats,
     };
 
 _AuthParams _$AuthParamsFromJson(Map<String, dynamic> json) => _AuthParams(
