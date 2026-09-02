@@ -19,6 +19,7 @@ class NavBar extends ConsumerWidget {
     });
 
     return Scaffold(
+      extendBody: true,
       bottomNavigationBar: _FloatingNavBar(
         currentIndex: currentIndex,
         onTap: (i) => context.go(_tabs[i]),
