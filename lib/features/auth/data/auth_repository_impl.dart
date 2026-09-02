@@ -1,5 +1,5 @@
 import 'package:kotik/core/failure/result.dart';
-import 'package:kotik/core/model/user_model.dart';
+import 'package:kotik/core/model/user/user_model.dart';
 import 'package:kotik/features/auth/data/auth_data_source.dart';
 import 'package:kotik/features/auth/domain/repositories/auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -50,12 +50,22 @@ class AuthRepositoryImpl implements AuthRepository {
       return Failure('Не удалось получить данные пользователя');
     }
 
-    return Success(
-      data: UserModel(
-        uid: firebaseUser.uid,
-        email: firebaseUser.email ?? '',
-        emailVerified: firebaseUser.emailVerified,
-      ),
+    return Success(data: _mapFirebaseUser(firebaseUser));
+  }
+
+  @override
+  Result<UserModel?> currentUser() {
+    final user = dataSource.getCurrentUser();
+    if (user == null) return Success(data: null);
+
+    return Success(data: _mapFirebaseUser(user));
+  }
+
+  UserModel _mapFirebaseUser(User user) {
+    return UserModel(
+      uid: user.uid,
+      email: user.email ?? '',
+      createdAt: user.metadata.creationTime ?? DateTime.now(),
     );
   }
 

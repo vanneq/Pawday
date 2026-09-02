@@ -22,4 +22,8 @@ class AuthDataSource {
   Future<void> logout() {
     return firebaseAuth.signOut();
   }
+
+  User? getCurrentUser() {
+    return firebaseAuth.currentUser;
+  }
 }
