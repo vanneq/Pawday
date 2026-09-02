@@ -7,6 +7,7 @@ const appColorScheme = ColorScheme.light(
   secondary: navColor,
   onSecondary: secondaryWhiteTextColor,
   tertiary: secondaryColor,
+  onTertiary: tertiaryColor,
   surface: background,
   onSurface: mainTextColor,
   error: Color.fromARGB(255, 186, 26, 26),

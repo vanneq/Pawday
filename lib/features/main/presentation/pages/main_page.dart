@@ -1,9 +1,10 @@
+import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kotik/core/di/injection_container.dart';
-import 'package:kotik/core/model/cat/cat_model.dart';
 import 'package:kotik/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:kotik/features/auth/presentation/cubit/auth_state.dart';
 import 'package:kotik/features/main/presentation/cubit/cats_cubit.dart';
@@ -19,7 +20,7 @@ class MainPage extends StatelessWidget {
         BlocProvider(create: (context) => getIt<AuthCubit>()),
         BlocProvider(create: (context) => getIt<CatsCubit>()..watchCats()),
       ],
-      child: MainView(),
+      child: const MainView(),
     );
   }
 }
@@ -47,11 +48,7 @@ class MainView extends StatelessWidget {
           return Scaffold(
             body: Stack(
               children: [
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  height: MediaQuery.of(context).size.height,
+                Positioned.fill(
                   child: Image.asset('assets/main_bg.png', fit: BoxFit.fill),
                 ),
                 SafeArea(
@@ -62,7 +59,6 @@ class MainView extends StatelessWidget {
                           constraints: BoxConstraints(
                             minHeight: constraints.maxHeight,
                           ),
-
                           child: Container(
                             width: double.infinity,
                             padding: EdgeInsets.fromLTRB(24.w, 100.h, 24.w, 0),
@@ -75,42 +71,9 @@ class MainView extends StatelessWidget {
                                 if (state is CatsError) Text(state.error),
                                 if (state is CatsInitial)
                                   const SizedBox.shrink(),
-                                if (state is CatsLoadedData)
-                                  if (state.cats.isEmpty)
-                                    Column(
-                                      children: [
-                                        Image.asset(
-                                          'assets/cats/empty_cat.png',
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            context.read<CatsCubit>().addCat(
-                                              CreateCatParams(
-                                                name: 'Лелик',
-                                                createdAt: DateTime.now(),
-                                                color: CatColoration.ginger,
-                                                dayWithCat: 1,
-                                                dairyEntries: 4,
-                                              ),
-                                            );
-                                          },
-
-                                          child: Text('Добавить кота'),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            context
-                                                .read<AuthCubit>()
-                                                .logoutUseCase();
-                                          },
-                                          child: Text('Выйти'),
-                                        ),
-                                      ],
-                                    )
-                                  else
-                                    Text(
-                                      'Котов добавлено: ${state.cats.length}',
-                                    ),
+                                if (state is CatsLoadedData &&
+                                    state.cats.isNotEmpty)
+                                  Text('Котов добавлено: ${state.cats.length}'),
                               ],
                             ),
                           ),
@@ -119,11 +82,72 @@ class MainView extends StatelessWidget {
                     },
                   ),
                 ),
+                if (state is CatsLoadedData && state.cats.isEmpty)
+                  const Positioned.fill(child: _NotAddedCats()),
               ],
             ),
           );
         },
       ),
+    );
+  }
+}
+
+class _NotAddedCats extends StatelessWidget {
+  const _NotAddedCats();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 130,
+          child: Opacity(
+            opacity: 0.55,
+            child: Image.asset('assets/cats/empty_cat.png'),
+          ),
+        ),
+        Positioned(
+          left: 10,
+          right: 44,
+          bottom: 254,
+          child: Center(
+            child: DottedBorder(
+              options: CircularDottedBorderOptions(
+                color: Theme.of(context).colorScheme.primary,
+                strokeWidth: 1.5,
+                dashPattern: const [5, 4],
+              ),
+              child: Container(
+                width: 54.w,
+                height: 54.w,
+                margin: EdgeInsets.all(3.w),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  shape: const CircleBorder(),
+                  child: InkWell(
+                    customBorder: const CircleBorder(),
+                    onTap: () {
+                      context.go('/profile');
+                    },
+                    child: Icon(
+                      CupertinoIcons.add,
+                      size: 34.sp,
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -46,6 +46,7 @@ dependencies:
   flutter_riverpod: ^3.3.2
   riverpod_annotation: ^4.0.3
   cloud_firestore: ^6.9.0
+  dotted_border: ^3.1.0
 
 
 dev_dependencies:
