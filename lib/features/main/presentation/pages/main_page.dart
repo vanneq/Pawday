@@ -147,6 +147,31 @@ class _NotAddedCats extends StatelessWidget {
             ),
           ),
         ),
+        Positioned(
+          left: 0,
+          right: 0,
+          top: 100,
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 20.w),
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.onSecondary,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(
+                color: Theme.of(context).colorScheme.outline,
+                width: 1.5,
+              ),
+            ),
+            child: Text(
+              'Добавьте вашего \n питомца 🐾',
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                fontWeight: FontWeight.w800,
+                color: Theme.of(context).colorScheme.onTertiary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
       ],
     );
   }
