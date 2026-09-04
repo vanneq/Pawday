@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kotik/core/di/injection_container.dart';
 import 'package:kotik/core/navigation/nav_item.dart';
+import 'package:kotik/features/main/presentation/cubit/cats_cubit.dart';
 
 class NavBar extends ConsumerWidget {
   final Widget child;
@@ -24,7 +27,10 @@ class NavBar extends ConsumerWidget {
         currentIndex: currentIndex,
         onTap: (i) => context.go(_tabs[i]),
       ),
-      body: child,
+      body: BlocProvider<CatsCubit>(
+        create: (_) => getIt<CatsCubit>()..watchCats(),
+        child: child,
+      ),
     );
   }
 }

@@ -5,7 +5,7 @@ part 'cat_model.g.dart';
 
 enum CatColoration { ginger, black, gray, white, brown, tricolor, tabby }
 
-enum Character { calm, playful, curious, capricious, lazy }
+enum CatCharacter { calm, playful, curious, capricious, lazy }
 
 @freezed
 abstract class CatModel with _$CatModel {
@@ -14,9 +14,9 @@ abstract class CatModel with _$CatModel {
     required String name,
     required DateTime createdAt,
     required CatColoration color,
-    required int dayWithCat,
+
     required int dairyEntries,
-    Character? character,
+    CatCharacter? character,
   }) = _CatModel;
   factory CatModel.fromJson(Map<String, dynamic> json) =>
       _$CatModelFromJson(json);
@@ -26,15 +26,14 @@ class CreateCatParams {
   final String name;
   final DateTime createdAt;
   final CatColoration color;
-  final int dayWithCat;
+
   final int dairyEntries;
-  final Character? character;
+  final CatCharacter? character;
 
   const CreateCatParams({
     required this.name,
     required this.createdAt,
     required this.color,
-    required this.dayWithCat,
     required this.dairyEntries,
     this.character,
   });

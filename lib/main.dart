@@ -16,7 +16,7 @@ void main() async {
     ScreenUtilInit(
       designSize: const Size(360, 844),
       builder: (context, child) {
-        return MaterialApp(home: child);
+        return child!;
       },
       child: UncontrolledProviderScope(
         container: container,

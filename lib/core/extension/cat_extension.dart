@@ -41,3 +41,20 @@ extension CatColorationTitle on CatColoration {
     }
   }
 }
+
+extension CatCharacterTitle on CatCharacter {
+  String get title {
+    switch (this) {
+      case CatCharacter.calm:
+        return 'Спокойный';
+      case CatCharacter.playful:
+        return 'Игривый';
+      case CatCharacter.capricious:
+        return 'Капризный';
+      case CatCharacter.curious:
+        return 'Любопытный';
+      case CatCharacter.lazy:
+        return 'Ленивый';
+    }
+  }
+}

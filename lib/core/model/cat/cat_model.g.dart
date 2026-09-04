@@ -11,9 +11,8 @@ _CatModel _$CatModelFromJson(Map<String, dynamic> json) => _CatModel(
   name: json['name'] as String,
   createdAt: DateTime.parse(json['createdAt'] as String),
   color: $enumDecode(_$CatColorationEnumMap, json['color']),
-  dayWithCat: (json['dayWithCat'] as num).toInt(),
   dairyEntries: (json['dairyEntries'] as num).toInt(),
-  character: $enumDecodeNullable(_$CharacterEnumMap, json['character']),
+  character: $enumDecodeNullable(_$CatCharacterEnumMap, json['character']),
 );
 
 Map<String, dynamic> _$CatModelToJson(_CatModel instance) => <String, dynamic>{
@@ -21,9 +20,8 @@ Map<String, dynamic> _$CatModelToJson(_CatModel instance) => <String, dynamic>{
   'name': instance.name,
   'createdAt': instance.createdAt.toIso8601String(),
   'color': _$CatColorationEnumMap[instance.color]!,
-  'dayWithCat': instance.dayWithCat,
   'dairyEntries': instance.dairyEntries,
-  'character': _$CharacterEnumMap[instance.character],
+  'character': _$CatCharacterEnumMap[instance.character],
 };
 
 const _$CatColorationEnumMap = {
@@ -36,10 +34,10 @@ const _$CatColorationEnumMap = {
   CatColoration.tabby: 'tabby',
 };
 
-const _$CharacterEnumMap = {
-  Character.calm: 'calm',
-  Character.playful: 'playful',
-  Character.curious: 'curious',
-  Character.capricious: 'capricious',
-  Character.lazy: 'lazy',
+const _$CatCharacterEnumMap = {
+  CatCharacter.calm: 'calm',
+  CatCharacter.playful: 'playful',
+  CatCharacter.curious: 'curious',
+  CatCharacter.capricious: 'capricious',
+  CatCharacter.lazy: 'lazy',
 };

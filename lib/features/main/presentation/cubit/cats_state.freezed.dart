@@ -55,14 +55,17 @@ extension CatsStatePatterns on CatsState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( CatsInitial value)?  initial,TResult Function( CatsLoading value)?  loading,TResult Function( CatsLoadedData value)?  loadedData,TResult Function( CatsError value)?  error,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( CatsInitial value)?  initial,TResult Function( CatsLoading value)?  loading,TResult Function( CatsLoadedData value)?  loadedData,TResult Function( CatsError value)?  error,TResult Function( CatsAdding value)?  adding,TResult Function( CatsAdded value)?  added,TResult Function( CatsSelected value)?  selected,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case CatsInitial() when initial != null:
 return initial(_that);case CatsLoading() when loading != null:
 return loading(_that);case CatsLoadedData() when loadedData != null:
 return loadedData(_that);case CatsError() when error != null:
-return error(_that);case _:
+return error(_that);case CatsAdding() when adding != null:
+return adding(_that);case CatsAdded() when added != null:
+return added(_that);case CatsSelected() when selected != null:
+return selected(_that);case _:
   return orElse();
 
 }
@@ -80,14 +83,17 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( CatsInitial value)  initial,required TResult Function( CatsLoading value)  loading,required TResult Function( CatsLoadedData value)  loadedData,required TResult Function( CatsError value)  error,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( CatsInitial value)  initial,required TResult Function( CatsLoading value)  loading,required TResult Function( CatsLoadedData value)  loadedData,required TResult Function( CatsError value)  error,required TResult Function( CatsAdding value)  adding,required TResult Function( CatsAdded value)  added,required TResult Function( CatsSelected value)  selected,}){
 final _that = this;
 switch (_that) {
 case CatsInitial():
 return initial(_that);case CatsLoading():
 return loading(_that);case CatsLoadedData():
 return loadedData(_that);case CatsError():
-return error(_that);}
+return error(_that);case CatsAdding():
+return adding(_that);case CatsAdded():
+return added(_that);case CatsSelected():
+return selected(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -101,14 +107,17 @@ return error(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( CatsInitial value)?  initial,TResult? Function( CatsLoading value)?  loading,TResult? Function( CatsLoadedData value)?  loadedData,TResult? Function( CatsError value)?  error,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( CatsInitial value)?  initial,TResult? Function( CatsLoading value)?  loading,TResult? Function( CatsLoadedData value)?  loadedData,TResult? Function( CatsError value)?  error,TResult? Function( CatsAdding value)?  adding,TResult? Function( CatsAdded value)?  added,TResult? Function( CatsSelected value)?  selected,}){
 final _that = this;
 switch (_that) {
 case CatsInitial() when initial != null:
 return initial(_that);case CatsLoading() when loading != null:
 return loading(_that);case CatsLoadedData() when loadedData != null:
 return loadedData(_that);case CatsError() when error != null:
-return error(_that);case _:
+return error(_that);case CatsAdding() when adding != null:
+return adding(_that);case CatsAdded() when added != null:
+return added(_that);case CatsSelected() when selected != null:
+return selected(_that);case _:
   return null;
 
 }
@@ -125,13 +134,16 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<CatModel> cats)?  loadedData,TResult Function( String error)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<CatModel> cats,  CatModel? selectedCat)?  loadedData,TResult Function( String error)?  error,TResult Function()?  adding,TResult Function()?  added,TResult Function()?  selected,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case CatsInitial() when initial != null:
 return initial();case CatsLoading() when loading != null:
 return loading();case CatsLoadedData() when loadedData != null:
-return loadedData(_that.cats);case CatsError() when error != null:
-return error(_that.error);case _:
+return loadedData(_that.cats,_that.selectedCat);case CatsError() when error != null:
+return error(_that.error);case CatsAdding() when adding != null:
+return adding();case CatsAdded() when added != null:
+return added();case CatsSelected() when selected != null:
+return selected();case _:
   return orElse();
 
 }
@@ -149,13 +161,16 @@ return error(_that.error);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<CatModel> cats)  loadedData,required TResult Function( String error)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<CatModel> cats,  CatModel? selectedCat)  loadedData,required TResult Function( String error)  error,required TResult Function()  adding,required TResult Function()  added,required TResult Function()  selected,}) {final _that = this;
 switch (_that) {
 case CatsInitial():
 return initial();case CatsLoading():
 return loading();case CatsLoadedData():
-return loadedData(_that.cats);case CatsError():
-return error(_that.error);}
+return loadedData(_that.cats,_that.selectedCat);case CatsError():
+return error(_that.error);case CatsAdding():
+return adding();case CatsAdded():
+return added();case CatsSelected():
+return selected();}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -169,13 +184,16 @@ return error(_that.error);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<CatModel> cats)?  loadedData,TResult? Function( String error)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<CatModel> cats,  CatModel? selectedCat)?  loadedData,TResult? Function( String error)?  error,TResult? Function()?  adding,TResult? Function()?  added,TResult? Function()?  selected,}) {final _that = this;
 switch (_that) {
 case CatsInitial() when initial != null:
 return initial();case CatsLoading() when loading != null:
 return loading();case CatsLoadedData() when loadedData != null:
-return loadedData(_that.cats);case CatsError() when error != null:
-return error(_that.error);case _:
+return loadedData(_that.cats,_that.selectedCat);case CatsError() when error != null:
+return error(_that.error);case CatsAdding() when adding != null:
+return adding();case CatsAdded() when added != null:
+return added();case CatsSelected() when selected != null:
+return selected();case _:
   return null;
 
 }
@@ -251,7 +269,7 @@ String toString() {
 
 
 class CatsLoadedData implements CatsState {
-  const CatsLoadedData({required final  List<CatModel> cats}): _cats = cats;
+  const CatsLoadedData({required final  List<CatModel> cats, this.selectedCat}): _cats = cats;
   
 
  final  List<CatModel> _cats;
@@ -261,6 +279,7 @@ class CatsLoadedData implements CatsState {
   return EqualUnmodifiableListView(_cats);
 }
 
+ final  CatModel? selectedCat;
 
 /// Create a copy of CatsState
 /// with the given fields replaced by the non-null parameter values.
@@ -272,16 +291,16 @@ $CatsLoadedDataCopyWith<CatsLoadedData> get copyWith => _$CatsLoadedDataCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CatsLoadedData&&const DeepCollectionEquality().equals(other._cats, _cats));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CatsLoadedData&&const DeepCollectionEquality().equals(other._cats, _cats)&&(identical(other.selectedCat, selectedCat) || other.selectedCat == selectedCat));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_cats));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_cats),selectedCat);
 
 @override
 String toString() {
-  return 'CatsState.loadedData(cats: $cats)';
+  return 'CatsState.loadedData(cats: $cats, selectedCat: $selectedCat)';
 }
 
 
@@ -292,11 +311,11 @@ abstract mixin class $CatsLoadedDataCopyWith<$Res> implements $CatsStateCopyWith
   factory $CatsLoadedDataCopyWith(CatsLoadedData value, $Res Function(CatsLoadedData) _then) = _$CatsLoadedDataCopyWithImpl;
 @useResult
 $Res call({
- List<CatModel> cats
+ List<CatModel> cats, CatModel? selectedCat
 });
 
 
-
+$CatModelCopyWith<$Res>? get selectedCat;
 
 }
 /// @nodoc
@@ -309,14 +328,27 @@ class _$CatsLoadedDataCopyWithImpl<$Res>
 
 /// Create a copy of CatsState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? cats = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? cats = null,Object? selectedCat = freezed,}) {
   return _then(CatsLoadedData(
 cats: null == cats ? _self._cats : cats // ignore: cast_nullable_to_non_nullable
-as List<CatModel>,
+as List<CatModel>,selectedCat: freezed == selectedCat ? _self.selectedCat : selectedCat // ignore: cast_nullable_to_non_nullable
+as CatModel?,
   ));
 }
 
+/// Create a copy of CatsState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$CatModelCopyWith<$Res>? get selectedCat {
+    if (_self.selectedCat == null) {
+    return null;
+  }
 
+  return $CatModelCopyWith<$Res>(_self.selectedCat!, (value) {
+    return _then(_self.copyWith(selectedCat: value));
+  });
+}
 }
 
 /// @nodoc
@@ -384,5 +416,101 @@ as String,
 
 
 }
+
+/// @nodoc
+
+
+class CatsAdding implements CatsState {
+  const CatsAdding();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CatsAdding);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'CatsState.adding()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class CatsAdded implements CatsState {
+  const CatsAdded();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CatsAdded);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'CatsState.added()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class CatsSelected implements CatsState {
+  const CatsSelected();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CatsSelected);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'CatsState.selected()';
+}
+
+
+}
+
+
+
 
 // dart format on

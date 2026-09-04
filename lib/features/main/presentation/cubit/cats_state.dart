@@ -7,7 +7,14 @@ part 'cats_state.freezed.dart';
 sealed class CatsState with _$CatsState {
   const factory CatsState.initial() = CatsInitial;
   const factory CatsState.loading() = CatsLoading;
-  const factory CatsState.loadedData({required List<CatModel> cats}) =
-      CatsLoadedData;
+  const factory CatsState.loadedData({
+    required List<CatModel> cats,
+    CatModel? selectedCat,
+  }) = CatsLoadedData;
   const factory CatsState.error(String error) = CatsError;
+
+  const factory CatsState.adding() = CatsAdding;
+  const factory CatsState.added() = CatsAdded;
+
+  const factory CatsState.selected() = CatsSelected;
 }

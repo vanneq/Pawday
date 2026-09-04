@@ -2,40 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kotik/core/di/injection_container.dart';
+import 'package:go_router/go_router.dart';
+import 'package:kotik/core/extension/cat_extension.dart';
+import 'package:kotik/core/extension/day_with_cat_extension.dart';
 import 'package:kotik/core/model/cat/cat_model.dart';
 import 'package:kotik/features/main/presentation/cubit/cats_cubit.dart';
+import 'package:kotik/features/main/presentation/cubit/cats_state.dart';
 import 'package:kotik/features/profile/presentation/widgets/cat_avatar.dart';
 import 'package:kotik/features/profile/presentation/widgets/cat_selector.dart';
-
-final cats = <CatModel>[
-  // CatModel(
-  //   id: '2',
-  //   name: 'Test',
-  //   createdAt: DateTime.now(),
-  //   color: CatColoration.black,
-  //   dayWithCat: 12,
-  //   dairyEntries: 3,
-  // ),
-  // CatModel(
-  //   id: '4',
-  //   name: 'Test',
-  //   createdAt: DateTime.now(),
-  //   color: CatColoration.ginger,
-  //   dayWithCat: 12,
-  //   dairyEntries: 3,
-  // ),
-];
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [BlocProvider(create: (context) => getIt<CatsCubit>())],
-      child: const ProfileView(),
-    );
+    return const ProfileView();
   }
 }
 
@@ -76,9 +57,34 @@ class ProfileView extends StatelessWidget {
                   padding: EdgeInsets.fromLTRB(14.w, 10.h, 14.w, 0),
                   child: Column(
                     children: [
-                      _ProfileCard(),
-                      SizedBox(height: 18.h),
-                      _CatList(),
+                      BlocBuilder<CatsCubit, CatsState>(
+                        builder: (context, state) {
+                          if (state is CatsLoading) {
+                            return const CircularProgressIndicator();
+                          }
+
+                          if (state is CatsLoadedData) {
+                            return Column(
+                              children: [
+                                _ProfileCard(selectCat: state.selectedCat),
+                                SizedBox(height: 18.h),
+                                CatList(
+                                  cats: state.cats,
+                                  selectedCatId: state.selectedCat?.id,
+                                ),
+                              ],
+                            );
+                          }
+
+                          return Column(
+                            children: [
+                              const _ProfileCard(),
+                              SizedBox(height: 18.h),
+                              const CatList(cats: []),
+                            ],
+                          );
+                        },
+                      ),
                       SizedBox(height: 18.h),
                       SettingsColumn(),
                     ],
@@ -94,6 +100,9 @@ class ProfileView extends StatelessWidget {
 }
 
 class _ProfileCard extends StatelessWidget {
+  final CatModel? selectCat;
+
+  const _ProfileCard({this.selectCat});
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -110,25 +119,41 @@ class _ProfileCard extends StatelessWidget {
           ),
           child: Row(
             children: [
-              CatAvatar(),
+              CatAvatar(
+                asset:
+                    selectCat?.color.imagePath ?? 'assets/cats/empty_cat.png',
+              ),
               SizedBox(width: 12.w),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text('Лелик', style: textTheme.bodyLarge),
-                      SizedBox(width: 8.w),
-                      InkWell(child: Icon(Icons.edit_outlined)),
-                    ],
-                  ),
-                  Text(
-                    'Рыжий кот',
-                    style: textTheme.bodyMedium!.copyWith(
-                      color: colorScheme.secondary,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            selectCat?.name ?? 'Добавьте меня 🐈',
+                            style: textTheme.bodyLarge,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        selectCat != null
+                            ? InkWell(child: Icon(Icons.edit_outlined))
+                            : const SizedBox.shrink(),
+                      ],
                     ),
-                  ),
-                ],
+                    Text(
+                      selectCat?.color.title != null
+                          ? '${selectCat?.color.title} кот'
+                          : 'Добавьте меня 🐈',
+                      style: textTheme.bodyMedium!.copyWith(
+                        color: colorScheme.secondary,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -162,7 +187,7 @@ class _ProfileCard extends StatelessWidget {
                           maxLines: 1,
                         ),
                         Text(
-                          '20',
+                          '${selectCat?.daysWithCat ?? 0}',
                           style: textTheme.bodyLarge!.copyWith(
                             color: colorScheme.onTertiary,
                           ),
@@ -193,7 +218,7 @@ class _ProfileCard extends StatelessWidget {
                             maxLines: 1,
                           ),
                           Text(
-                            '12',
+                            '${selectCat?.dairyEntries ?? 0}',
                             style: textTheme.bodyLarge!.copyWith(
                               color: colorScheme.onTertiary,
                             ),
@@ -212,7 +237,12 @@ class _ProfileCard extends StatelessWidget {
   }
 }
 
-class _CatList extends StatelessWidget {
+class CatList extends StatelessWidget {
+  final String? selectedCatId;
+  final List<CatModel> cats;
+
+  const CatList({super.key, required this.cats, this.selectedCatId});
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -239,7 +269,16 @@ class _CatList extends StatelessWidget {
           ],
         ),
         SizedBox(height: 8.h),
-        CatSelector(cats: cats, onCatTap: (cat) {}),
+        CatSelector(
+          selectedCatId: selectedCatId,
+          cats: cats,
+          onCatTap: (cat) {
+            context.read<CatsCubit>().selectCat(cat);
+          },
+          onAddCatTap: () {
+            context.push('/profile/add_cat');
+          },
+        ),
       ],
     );
   }

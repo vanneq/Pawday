@@ -18,6 +18,8 @@ class CatsCubit extends Cubit<CatsState> {
   final WatchCatsUsecase watchCatsUsecase;
   final DeleteCatUsecase deleteCatUsecase;
   final GetCurrentUserUsecase getCurrentUserUsecase;
+  CatModel? selectedCat;
+  List<CatModel> currentCatsList = [];
 
   CatsCubit({
     required this.addCatUsecase,
@@ -32,11 +34,14 @@ class CatsCubit extends Cubit<CatsState> {
     final user = _getCurrentUser();
     if (user == null) return;
 
+    emit(const CatsState.adding());
+
     final result = await addCatUsecase(user.uid, newCat);
 
     if (result is Failure<void>) {
       emit(CatsState.error(result.message));
     }
+    emit(const CatsState.added());
   }
 
   Future<void> deleteCat(String catId) async {
@@ -57,6 +62,11 @@ class CatsCubit extends Cubit<CatsState> {
     }
   }
 
+  void selectCat(CatModel cat) {
+    selectedCat = cat;
+    emit(CatsState.loadedData(cats: currentCatsList, selectedCat: selectedCat));
+  }
+
   StreamSubscription<Result<List<CatModel>>>? _catsSubscription;
 
   void watchCats() {
@@ -69,7 +79,14 @@ class CatsCubit extends Cubit<CatsState> {
     _catsSubscription = watchCatsUsecase(user.uid).listen(
       (result) {
         if (result is Success<List<CatModel>>) {
-          emit(CatsState.loadedData(cats: result.data));
+          currentCatsList = result.data;
+          selectedCat ??= currentCatsList.isNotEmpty
+              ? currentCatsList.first
+              : null;
+          emit(
+            CatsState.loadedData(cats: result.data, selectedCat: selectedCat),
+          );
+
           return;
         }
         if (result is Failure<List<CatModel>>) {

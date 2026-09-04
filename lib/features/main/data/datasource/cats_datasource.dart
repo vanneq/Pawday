@@ -18,7 +18,7 @@ class CatsDatasource {
       name: cat.name,
       createdAt: cat.createdAt,
       color: cat.color,
-      dayWithCat: cat.dayWithCat,
+
       dairyEntries: cat.dairyEntries,
       character: cat.character,
     );
