@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const background = Color.fromARGB(253, 251, 246, 239);
+const background = Color.fromARGB(255, 252, 239, 221);
 const primaryColor = Color.fromARGB(255, 239, 123, 44);
 const secondaryColor = Color.fromARGB(255, 254, 250, 236);
 const borderColor = Color.fromARGB(255, 206, 196, 186);
