@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kotik/core/di/injection_container.dart';
 import 'package:kotik/core/extension/cat_extension.dart';
+import 'package:kotik/core/extension/day_with_cat_extension.dart';
 import 'package:kotik/core/model/cat/cat_model.dart';
 import 'package:kotik/core/widgets/snackbar.dart';
 import 'package:kotik/features/auth/presentation/cubit/auth_cubit.dart';
@@ -130,6 +131,31 @@ class _AddedCatsList extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
+          ),
+        ),
+        Positioned(
+          left: 0,
+          right: 0,
+          top: 170,
+          child: Column(
+            children: [
+              Text(
+                'Дней с котом:',
+                style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                  fontWeight: FontWeight.w800,
+                  color: Theme.of(context).colorScheme.onTertiary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              Text(
+                '${selectedCat?.daysWithCat ?? 0}',
+                style: Theme.of(context).textTheme.displayLarge!.copyWith(
+                  fontWeight: FontWeight.w800,
+                  color: Theme.of(context).colorScheme.onTertiary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
         ),
       ],

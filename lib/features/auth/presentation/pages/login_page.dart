@@ -90,100 +90,127 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ),
                               SizedBox(height: 42.h),
-                              Form(
-                                child: Column(
-                                  children: [
-                                    AuthTextField(
-                                      controller: emailController,
-                                      validator: (value) =>
-                                          AuthValidators.email(value),
-                                      hintText: 'Email',
-                                      icon: Icons.mail_outline_rounded,
-                                      keyboardType: TextInputType.emailAddress,
-                                    ),
-                                    SizedBox(height: 14.h),
-                                    AuthTextField(
-                                      controller: passwordController,
-                                      validator: (value) =>
-                                          AuthValidators.password(value),
-                                      hintText: 'Пароль',
-                                      icon: Icons.lock_outline_rounded,
-                                      obscureText: _obscurePassword,
-                                      trailing: IconButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            _obscurePassword =
-                                                !_obscurePassword;
-                                          });
-                                        },
-                                        icon: Icon(
-                                          _obscurePassword
-                                              ? Icons.visibility_outlined
-                                              : Icons.visibility_off_outlined,
-                                        ),
-                                        color: navColor,
-                                        tooltip: _obscurePassword
-                                            ? 'Показать пароль'
-                                            : 'Скрыть пароль',
-                                      ),
-                                    ),
-                                    SizedBox(height: 14.h),
-
-                                    SizedBox(height: 24.h),
-                                    SizedBox(
-                                      width: double.infinity,
-                                      child: AuthSubmitButton(
-                                        text: 'Войти в аккаунт',
-                                        globalKey: globalKey,
-                                        onPressed: () {
-                                          context.read<AuthCubit>().login(
-                                            emailController.text,
-                                            passwordController.text,
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    SizedBox(height: 10.h),
-                                    if (error.length >= 2)
-                                      Text(
-                                        error,
-                                        style: TextStyle(color: Colors.red),
-                                      ),
-                                  ],
+                              Container(
+                                padding: EdgeInsets.fromLTRB(
+                                  18.w,
+                                  26.h,
+                                  18.w,
+                                  16.h,
                                 ),
-                              ),
-                              SizedBox(height: 12.h),
-                              Text.rich(
-                                TextSpan(
-                                  style: textTheme.bodyMedium?.copyWith(
-                                    color: mainTextColor.withValues(
-                                      alpha: 0.78,
-                                    ),
-                                    fontSize: 16.sp,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSecondary.withAlpha(230),
+                                  borderRadius: BorderRadius.circular(14.r),
+                                  border: Border.all(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.outline.withAlpha(150),
                                   ),
-                                  children: [
-                                    const TextSpan(
-                                      text: 'Еще не присоединились к нам? ',
-                                    ),
-                                    WidgetSpan(
-                                      alignment: PlaceholderAlignment.middle,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          context.go('/register');
-                                        },
-                                        child: Text(
-                                          'Замяугистрироваться',
-                                          style: textTheme.bodyMedium?.copyWith(
-                                            color: primaryColor,
-                                            fontSize: 16.sp,
-                                            fontWeight: FontWeight.w800,
+                                ),
+                                child: Form(
+                                  key: globalKey,
+                                  child: Column(
+                                    children: [
+                                      AuthTextField(
+                                        controller: emailController,
+                                        validator: (value) =>
+                                            AuthValidators.email(value),
+                                        hintText: 'Email',
+                                        icon: Icons.mail_outline_rounded,
+                                        keyboardType:
+                                            TextInputType.emailAddress,
+                                      ),
+                                      SizedBox(height: 14.h),
+                                      AuthTextField(
+                                        controller: passwordController,
+                                        validator: (value) =>
+                                            AuthValidators.password(value),
+                                        hintText: 'Пароль',
+                                        icon: Icons.lock_outline_rounded,
+                                        obscureText: _obscurePassword,
+                                        trailing: IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              _obscurePassword =
+                                                  !_obscurePassword;
+                                            });
+                                          },
+                                          icon: Icon(
+                                            _obscurePassword
+                                                ? Icons.visibility_outlined
+                                                : Icons.visibility_off_outlined,
+                                          ),
+                                          color: navColor,
+                                          tooltip: _obscurePassword
+                                              ? 'Показать пароль'
+                                              : 'Скрыть пароль',
+                                        ),
+                                      ),
+                                      SizedBox(height: 24.h),
+                                      SizedBox(
+                                        width: double.infinity,
+                                        child: AuthSubmitButton(
+                                          text: 'Войти в аккаунт',
+                                          globalKey: globalKey,
+                                          onPressed: () {
+                                            context.read<AuthCubit>().login(
+                                              emailController.text,
+                                              passwordController.text,
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(height: 10.h),
+                                      if (error.length >= 2)
+                                        Text(
+                                          error,
+                                          style: TextStyle(
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.error,
                                           ),
                                         ),
+                                      SizedBox(height: 8.h),
+                                      Text.rich(
+                                        TextSpan(
+                                          style: textTheme.bodyMedium?.copyWith(
+                                            color: mainTextColor.withValues(
+                                              alpha: 0.78,
+                                            ),
+                                            fontSize: 15.sp,
+                                          ),
+                                          children: [
+                                            const TextSpan(
+                                              text:
+                                                  'Еще не присоединились к нам? ',
+                                            ),
+                                            WidgetSpan(
+                                              alignment:
+                                                  PlaceholderAlignment.middle,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  context.go('/register');
+                                                },
+                                                child: Text(
+                                                  'Замяугистрироваться',
+                                                  style: textTheme.bodyMedium
+                                                      ?.copyWith(
+                                                        color: primaryColor,
+                                                        fontSize: 15.sp,
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                      ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        textAlign: TextAlign.center,
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                                textAlign: TextAlign.center,
                               ),
                               SizedBox(height: 6.h),
                             ],
