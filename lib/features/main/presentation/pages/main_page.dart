@@ -5,6 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kotik/core/di/injection_container.dart';
+import 'package:kotik/core/extension/cat_extension.dart';
+import 'package:kotik/core/model/cat/cat_model.dart';
+import 'package:kotik/core/widgets/snackbar.dart';
 import 'package:kotik/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:kotik/features/auth/presentation/cubit/auth_state.dart';
 import 'package:kotik/features/main/presentation/cubit/cats_cubit.dart';
@@ -16,10 +19,7 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => getIt<AuthCubit>()),
-        BlocProvider(create: (context) => getIt<CatsCubit>()..watchCats()),
-      ],
+      providers: [BlocProvider(create: (context) => getIt<AuthCubit>())],
       child: const MainView(),
     );
   }
@@ -36,9 +36,7 @@ class MainView extends StatelessWidget {
           listener: (BuildContext context, AuthState state) {
             if (state is AuthUnauthenticated) context.go('/auth');
             if (state is AuthError) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.error)));
+              showSuccessSnackbar(context, state.error);
             }
           },
         ),
@@ -71,9 +69,6 @@ class MainView extends StatelessWidget {
                                 if (state is CatsError) Text(state.error),
                                 if (state is CatsInitial)
                                   const SizedBox.shrink(),
-                                if (state is CatsLoadedData &&
-                                    state.cats.isNotEmpty)
-                                  Text('Котов добавлено: ${state.cats.length}'),
                               ],
                             ),
                           ),
@@ -84,11 +79,60 @@ class MainView extends StatelessWidget {
                 ),
                 if (state is CatsLoadedData && state.cats.isEmpty)
                   const Positioned.fill(child: _NotAddedCats()),
+                if (state is CatsLoadedData && state.selectedCat != null)
+                  Positioned.fill(
+                    child: _AddedCatsList(selectedCat: state.selectedCat!),
+                  ),
               ],
             ),
           );
         },
       ),
+    );
+  }
+}
+
+class _AddedCatsList extends StatelessWidget {
+  final CatModel selectedCat;
+  const _AddedCatsList({required this.selectedCat});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 90,
+          child: Image.asset(selectedCat.color.imagePath),
+        ),
+
+        Positioned(
+          left: 0,
+          right: 0,
+          top: 100,
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 20.w),
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.onSecondary,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(
+                color: Theme.of(context).colorScheme.outline,
+                width: 1.5,
+              ),
+            ),
+            child: Text(
+              '${selectedCat.name} вас заждался!',
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                fontWeight: FontWeight.w800,
+                color: Theme.of(context).colorScheme.onTertiary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
