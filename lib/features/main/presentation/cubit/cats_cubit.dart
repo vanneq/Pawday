@@ -40,8 +40,10 @@ class CatsCubit extends Cubit<CatsState> {
 
     if (result is Failure<void>) {
       emit(CatsState.error(result.message));
+      return;
     }
     emit(const CatsState.added());
+    _emitLoadedData();
   }
 
   Future<void> deleteCat(String catId) async {
@@ -56,10 +58,22 @@ class CatsCubit extends Cubit<CatsState> {
   Future<void> updateCat(CatModel cat) async {
     final user = _getCurrentUser();
     if (user == null) return;
+    emit(const CatsState.editing());
     final result = await updateCatUsecase(user.uid, cat);
     if (result is Failure<void>) {
       emit(CatsState.error(result.message));
+      return;
     }
+
+    currentCatsList = currentCatsList
+        .map((currentCat) => currentCat.id == cat.id ? cat : currentCat)
+        .toList();
+    if (selectedCat?.id == cat.id) {
+      selectedCat = cat;
+    }
+
+    emit(const CatsState.edited());
+    _emitLoadedData();
   }
 
   void selectCat(CatModel cat) {
@@ -80,12 +94,8 @@ class CatsCubit extends Cubit<CatsState> {
       (result) {
         if (result is Success<List<CatModel>>) {
           currentCatsList = result.data;
-          selectedCat ??= currentCatsList.isNotEmpty
-              ? currentCatsList.first
-              : null;
-          emit(
-            CatsState.loadedData(cats: result.data, selectedCat: selectedCat),
-          );
+          _syncSelectedCat();
+          _emitLoadedData();
 
           return;
         }
@@ -121,5 +131,31 @@ class CatsCubit extends Cubit<CatsState> {
     }
 
     return user;
+  }
+
+  void _syncSelectedCat() {
+    if (currentCatsList.isEmpty) {
+      selectedCat = null;
+      return;
+    }
+
+    final selectedCatId = selectedCat?.id;
+    if (selectedCatId == null) {
+      selectedCat = currentCatsList.first;
+      return;
+    }
+
+    for (final cat in currentCatsList) {
+      if (cat.id == selectedCatId) {
+        selectedCat = cat;
+        return;
+      }
+    }
+
+    selectedCat = currentCatsList.first;
+  }
+
+  void _emitLoadedData() {
+    emit(CatsState.loadedData(cats: currentCatsList, selectedCat: selectedCat));
   }
 }

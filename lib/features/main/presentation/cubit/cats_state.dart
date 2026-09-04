@@ -16,5 +16,8 @@ sealed class CatsState with _$CatsState {
   const factory CatsState.adding() = CatsAdding;
   const factory CatsState.added() = CatsAdded;
 
+  const factory CatsState.editing() = CatsEditing;
+  const factory CatsState.edited() = CatsEdited;
+
   const factory CatsState.selected() = CatsSelected;
 }

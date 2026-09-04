@@ -55,7 +55,7 @@ extension CatsStatePatterns on CatsState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( CatsInitial value)?  initial,TResult Function( CatsLoading value)?  loading,TResult Function( CatsLoadedData value)?  loadedData,TResult Function( CatsError value)?  error,TResult Function( CatsAdding value)?  adding,TResult Function( CatsAdded value)?  added,TResult Function( CatsSelected value)?  selected,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( CatsInitial value)?  initial,TResult Function( CatsLoading value)?  loading,TResult Function( CatsLoadedData value)?  loadedData,TResult Function( CatsError value)?  error,TResult Function( CatsAdding value)?  adding,TResult Function( CatsAdded value)?  added,TResult Function( CatsEditing value)?  editing,TResult Function( CatsEdited value)?  edited,TResult Function( CatsSelected value)?  selected,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case CatsInitial() when initial != null:
@@ -64,7 +64,9 @@ return loading(_that);case CatsLoadedData() when loadedData != null:
 return loadedData(_that);case CatsError() when error != null:
 return error(_that);case CatsAdding() when adding != null:
 return adding(_that);case CatsAdded() when added != null:
-return added(_that);case CatsSelected() when selected != null:
+return added(_that);case CatsEditing() when editing != null:
+return editing(_that);case CatsEdited() when edited != null:
+return edited(_that);case CatsSelected() when selected != null:
 return selected(_that);case _:
   return orElse();
 
@@ -83,7 +85,7 @@ return selected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( CatsInitial value)  initial,required TResult Function( CatsLoading value)  loading,required TResult Function( CatsLoadedData value)  loadedData,required TResult Function( CatsError value)  error,required TResult Function( CatsAdding value)  adding,required TResult Function( CatsAdded value)  added,required TResult Function( CatsSelected value)  selected,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( CatsInitial value)  initial,required TResult Function( CatsLoading value)  loading,required TResult Function( CatsLoadedData value)  loadedData,required TResult Function( CatsError value)  error,required TResult Function( CatsAdding value)  adding,required TResult Function( CatsAdded value)  added,required TResult Function( CatsEditing value)  editing,required TResult Function( CatsEdited value)  edited,required TResult Function( CatsSelected value)  selected,}){
 final _that = this;
 switch (_that) {
 case CatsInitial():
@@ -92,7 +94,9 @@ return loading(_that);case CatsLoadedData():
 return loadedData(_that);case CatsError():
 return error(_that);case CatsAdding():
 return adding(_that);case CatsAdded():
-return added(_that);case CatsSelected():
+return added(_that);case CatsEditing():
+return editing(_that);case CatsEdited():
+return edited(_that);case CatsSelected():
 return selected(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
@@ -107,7 +111,7 @@ return selected(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( CatsInitial value)?  initial,TResult? Function( CatsLoading value)?  loading,TResult? Function( CatsLoadedData value)?  loadedData,TResult? Function( CatsError value)?  error,TResult? Function( CatsAdding value)?  adding,TResult? Function( CatsAdded value)?  added,TResult? Function( CatsSelected value)?  selected,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( CatsInitial value)?  initial,TResult? Function( CatsLoading value)?  loading,TResult? Function( CatsLoadedData value)?  loadedData,TResult? Function( CatsError value)?  error,TResult? Function( CatsAdding value)?  adding,TResult? Function( CatsAdded value)?  added,TResult? Function( CatsEditing value)?  editing,TResult? Function( CatsEdited value)?  edited,TResult? Function( CatsSelected value)?  selected,}){
 final _that = this;
 switch (_that) {
 case CatsInitial() when initial != null:
@@ -116,7 +120,9 @@ return loading(_that);case CatsLoadedData() when loadedData != null:
 return loadedData(_that);case CatsError() when error != null:
 return error(_that);case CatsAdding() when adding != null:
 return adding(_that);case CatsAdded() when added != null:
-return added(_that);case CatsSelected() when selected != null:
+return added(_that);case CatsEditing() when editing != null:
+return editing(_that);case CatsEdited() when edited != null:
+return edited(_that);case CatsSelected() when selected != null:
 return selected(_that);case _:
   return null;
 
@@ -134,7 +140,7 @@ return selected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<CatModel> cats,  CatModel? selectedCat)?  loadedData,TResult Function( String error)?  error,TResult Function()?  adding,TResult Function()?  added,TResult Function()?  selected,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<CatModel> cats,  CatModel? selectedCat)?  loadedData,TResult Function( String error)?  error,TResult Function()?  adding,TResult Function()?  added,TResult Function()?  editing,TResult Function()?  edited,TResult Function()?  selected,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case CatsInitial() when initial != null:
 return initial();case CatsLoading() when loading != null:
@@ -142,7 +148,9 @@ return loading();case CatsLoadedData() when loadedData != null:
 return loadedData(_that.cats,_that.selectedCat);case CatsError() when error != null:
 return error(_that.error);case CatsAdding() when adding != null:
 return adding();case CatsAdded() when added != null:
-return added();case CatsSelected() when selected != null:
+return added();case CatsEditing() when editing != null:
+return editing();case CatsEdited() when edited != null:
+return edited();case CatsSelected() when selected != null:
 return selected();case _:
   return orElse();
 
@@ -161,7 +169,7 @@ return selected();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<CatModel> cats,  CatModel? selectedCat)  loadedData,required TResult Function( String error)  error,required TResult Function()  adding,required TResult Function()  added,required TResult Function()  selected,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<CatModel> cats,  CatModel? selectedCat)  loadedData,required TResult Function( String error)  error,required TResult Function()  adding,required TResult Function()  added,required TResult Function()  editing,required TResult Function()  edited,required TResult Function()  selected,}) {final _that = this;
 switch (_that) {
 case CatsInitial():
 return initial();case CatsLoading():
@@ -169,7 +177,9 @@ return loading();case CatsLoadedData():
 return loadedData(_that.cats,_that.selectedCat);case CatsError():
 return error(_that.error);case CatsAdding():
 return adding();case CatsAdded():
-return added();case CatsSelected():
+return added();case CatsEditing():
+return editing();case CatsEdited():
+return edited();case CatsSelected():
 return selected();}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -184,7 +194,7 @@ return selected();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<CatModel> cats,  CatModel? selectedCat)?  loadedData,TResult? Function( String error)?  error,TResult? Function()?  adding,TResult? Function()?  added,TResult? Function()?  selected,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<CatModel> cats,  CatModel? selectedCat)?  loadedData,TResult? Function( String error)?  error,TResult? Function()?  adding,TResult? Function()?  added,TResult? Function()?  editing,TResult? Function()?  edited,TResult? Function()?  selected,}) {final _that = this;
 switch (_that) {
 case CatsInitial() when initial != null:
 return initial();case CatsLoading() when loading != null:
@@ -192,7 +202,9 @@ return loading();case CatsLoadedData() when loadedData != null:
 return loadedData(_that.cats,_that.selectedCat);case CatsError() when error != null:
 return error(_that.error);case CatsAdding() when adding != null:
 return adding();case CatsAdded() when added != null:
-return added();case CatsSelected() when selected != null:
+return added();case CatsEditing() when editing != null:
+return editing();case CatsEdited() when edited != null:
+return edited();case CatsSelected() when selected != null:
 return selected();case _:
   return null;
 
@@ -473,6 +485,70 @@ int get hashCode => runtimeType.hashCode;
 @override
 String toString() {
   return 'CatsState.added()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class CatsEditing implements CatsState {
+  const CatsEditing();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CatsEditing);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'CatsState.editing()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class CatsEdited implements CatsState {
+  const CatsEdited();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CatsEdited);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'CatsState.edited()';
 }
 
 

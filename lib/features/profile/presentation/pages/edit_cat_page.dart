@@ -1,7 +1,9 @@
+import 'dart:async';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kotik/core/extension/cat_extension.dart';
 import 'package:kotik/core/model/cat/cat_model.dart';
@@ -11,33 +13,26 @@ import 'package:kotik/features/main/presentation/cubit/cats_cubit.dart';
 import 'package:kotik/features/main/presentation/cubit/cats_state.dart';
 import 'package:kotik/features/profile/presentation/widgets/cat_avatar.dart';
 
-class AddCatPage extends StatelessWidget {
-  const AddCatPage({super.key});
+class EditCatPage extends StatefulWidget {
+  final CatModel cat;
+
+  const EditCatPage({super.key, required this.cat});
 
   @override
-  Widget build(BuildContext context) {
-    return const AddCatView();
-  }
+  State<EditCatPage> createState() => _EditCatPageState();
 }
 
-class AddCatView extends StatefulWidget {
-  const AddCatView({super.key});
-
-  @override
-  State<AddCatView> createState() => _AddCatViewState();
-}
-
-class _AddCatViewState extends State<AddCatView> {
-  final TextEditingController nameController = TextEditingController();
-  CatColoration selectedColor = CatColoration.ginger;
-  CatCharacter selectedCharacter = CatCharacter.calm;
+class _EditCatPageState extends State<EditCatPage> {
+  late final TextEditingController nameController;
+  late CatColoration selectedColor;
+  late CatCharacter selectedCharacter;
 
   @override
   void initState() {
     super.initState();
-    nameController.addListener(() {
-      setState(() {});
-    });
+    nameController = TextEditingController(text: widget.cat.name);
+    selectedColor = widget.cat.color;
+    selectedCharacter = widget.cat.character ?? CatCharacter.calm;
   }
 
   @override
@@ -46,13 +41,20 @@ class _AddCatViewState extends State<AddCatView> {
     super.dispose();
   }
 
+  void _showDeleteCatDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (context) => _DeleteCatDialog(cat: widget.cat),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<CatsCubit, CatsState>(
       listener: (context, state) {
-        if (state is CatsAdded) {
+        if (state is CatsEdited) {
           if (context.canPop()) {
-            showSuccessSnackbar(context, 'Питомец успешно добавлен 🐾');
+            showSuccessSnackbar(context, 'Питомец успешно обновлен 🐾');
             context.pop();
           }
         }
@@ -75,27 +77,40 @@ class _AddCatViewState extends State<AddCatView> {
                       children: [
                         SizedBox(
                           width: double.infinity,
-                          child: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () {
-                              if (context.canPop()) context.pop();
-                            },
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Icon(Icons.arrow_back_ios, size: 26),
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () {
+                                  if (context.canPop()) context.pop();
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.all(6.w),
+                                  child: Icon(Icons.arrow_back_ios, size: 26),
+                                ),
+                              ),
+                              GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: _showDeleteCatDialog,
+                                child: Padding(
+                                  padding: EdgeInsets.all(6.w),
+                                  child: Icon(
+                                    Icons.remove_circle_outline,
+                                    color: Theme.of(context).colorScheme.error,
+                                    size: 28,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         SizedBox(height: 10.h),
                         Text(
-                          'Давай познакомимся!',
+                          'Редактировать котика',
                           style: Theme.of(context).textTheme.headlineLarge,
                         ),
-                        SizedBox(height: 8.h),
-                        Text(
-                          'Как зовут твоего кота?',
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
+
                         SizedBox(height: 16.h),
                         _TextFieldName(controller: nameController),
                         SizedBox(height: 16.h),
@@ -119,20 +134,16 @@ class _AddCatViewState extends State<AddCatView> {
                         SizedBox(height: 24.h),
                         BlocBuilder<CatsCubit, CatsState>(
                           builder: (context, state) {
-                            final isLoading = state is CatsAdding;
+                            final isLoading = state is CatsEditing;
 
                             return PrimaryButton(
                               isActive: nameController.text.trim().isNotEmpty,
                               isLoading: isLoading,
-                              text: 'Добавить котика',
+                              text: 'Редактировать котика',
                               onPressed: () {
-                                context.read<CatsCubit>().addCat(
-                                  CreateCatParams(
-                                    name: nameController.text,
-                                    createdAt: DateTime.now(),
+                                context.read<CatsCubit>().updateCat(
+                                  widget.cat.copyWith(
                                     color: selectedColor,
-
-                                    dairyEntries: 0,
                                     character: selectedCharacter,
                                   ),
                                 );
@@ -154,6 +165,149 @@ class _AddCatViewState extends State<AddCatView> {
   }
 }
 
+class _DeleteCatDialog extends StatefulWidget {
+  final CatModel cat;
+  const _DeleteCatDialog({required this.cat});
+
+  @override
+  State<_DeleteCatDialog> createState() => _DeleteCatDialogState();
+}
+
+class _DeleteCatDialogState extends State<_DeleteCatDialog> {
+  static const _initialSeconds = 10;
+
+  Timer? _timer;
+  int _secondsLeft = _initialSeconds;
+
+  bool get _canRemove => _secondsLeft == 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_secondsLeft <= 1) {
+        timer.cancel();
+        setState(() {
+          _secondsLeft = 0;
+        });
+        return;
+      }
+
+      setState(() {
+        _secondsLeft--;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Dialog(
+      insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
+      backgroundColor: Colors.transparent,
+      child: Container(
+        padding: EdgeInsets.fromLTRB(18.w, 18.h, 18.w, 14.h),
+        decoration: BoxDecoration(
+          color: colorScheme.surface,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(color: colorScheme.outline.withAlpha(140)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withAlpha(24),
+              blurRadius: 24,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 54.w,
+              height: 54.w,
+              decoration: BoxDecoration(
+                color: colorScheme.error.withAlpha(24),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.remove_circle_outline,
+                color: colorScheme.error,
+                size: 30,
+              ),
+            ),
+            SizedBox(height: 14.h),
+            Text(
+              'Убрать котика из профиля?',
+              textAlign: TextAlign.center,
+              style: textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              'После удаления данные нельзя будет восстановить',
+              textAlign: TextAlign.center,
+              style: textTheme.bodyMedium?.copyWith(
+                color: colorScheme.secondary,
+              ),
+            ),
+            SizedBox(height: 18.h),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => context.pop(),
+                    style: OutlinedButton.styleFrom(
+                      padding: EdgeInsets.symmetric(vertical: 10.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                    ),
+                    child: const Text('Отмена'),
+                  ),
+                ),
+                SizedBox(width: 10.w),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: _canRemove
+                        ? () {
+                            context.read<CatsCubit>().deleteCat(widget.cat.id);
+                            context.go('/profile');
+                            showSuccessSnackbar(
+                              context,
+                              'Ваш котик ${widget.cat.name} был удален',
+                            );
+                          }
+                        : null,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: colorScheme.error,
+                      disabledBackgroundColor: colorScheme.error.withAlpha(110),
+                      padding: EdgeInsets.symmetric(vertical: 10.h),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                    ),
+                    child: Text(
+                      _canRemove ? 'Убрать' : 'Убрать ($_secondsLeft)',
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _TextFieldName extends StatelessWidget {
   final TextEditingController controller;
   const _TextFieldName({required this.controller});
@@ -162,36 +316,52 @@ class _TextFieldName extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return TextField(
-      controller: controller,
-      maxLength: 22,
-      decoration: InputDecoration(
-        counterText: '',
-        suffixIcon: Icon(
-          Icons.pets,
-          size: 26,
-          color: colorScheme.secondary.withAlpha(170),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          enabled: false,
+          controller: controller,
+          maxLength: 22,
+          decoration: InputDecoration(
+            counterText: '',
+            suffixIcon: Icon(
+              Icons.pets,
+              size: 26,
+              color: colorScheme.secondary.withAlpha(170),
+            ),
+            filled: true,
+            fillColor: colorScheme.onPrimary,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 16.w,
+              vertical: 14.h,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(color: colorScheme.outline),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(color: colorScheme.primary, width: 1.5),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(color: colorScheme.error),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+              borderSide: BorderSide(color: colorScheme.error, width: 1.5),
+            ),
+          ),
         ),
-        filled: true,
-        fillColor: colorScheme.onPrimary,
-        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide(color: colorScheme.outline),
+        SizedBox(height: 4.h),
+        Text(
+          'Имя котика неизменяемо',
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+            color: Theme.of(context).colorScheme.secondary,
+          ),
         ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide(color: colorScheme.primary, width: 1.5),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide(color: colorScheme.error),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
-          borderSide: BorderSide(color: colorScheme.error, width: 1.5),
-        ),
-      ),
+      ],
     );
   }
 }

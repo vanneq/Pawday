@@ -140,14 +140,20 @@ class _ProfileCard extends StatelessWidget {
                         ),
                         SizedBox(width: 8.w),
                         selectCat != null
-                            ? InkWell(child: Icon(Icons.edit_outlined))
+                            ? InkWell(
+                                onTap: () => context.push(
+                                  '/profile/edit_cat',
+                                  extra: selectCat,
+                                ),
+                                child: Icon(Icons.edit_outlined),
+                              )
                             : const SizedBox.shrink(),
                       ],
                     ),
                     Text(
                       selectCat?.color.title != null
                           ? '${selectCat?.color.title} кот'
-                          : 'Добавьте меня 🐈',
+                          : 'Неопознанный кот',
                       style: textTheme.bodyMedium!.copyWith(
                         color: colorScheme.secondary,
                       ),
@@ -245,29 +251,18 @@ class CatList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
     return Column(
       children: [
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Мои котики',
-              style: textTheme.bodyLarge!.copyWith(fontSize: 18),
-            ),
-            InkWell(
-              child: Text(
-                'Управление',
-                style: textTheme.bodyMedium!.copyWith(
-                  color: colorScheme.primary,
-                ),
-              ),
-            ),
-          ],
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'Мои котики',
+            style: textTheme.bodyLarge!.copyWith(fontSize: 18),
+          ),
         ),
+
         SizedBox(height: 8.h),
         CatSelector(
           selectedCatId: selectedCatId,
