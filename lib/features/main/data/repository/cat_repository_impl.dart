@@ -16,7 +16,7 @@ class CatRepositoryImpl implements CatRepository {
       return Success(data: null);
     } catch (e) {
       debugPrint(e.toString());
-      return Failure<void>('Не удалось добавить кота 😿', e);
+      return Failure<void>('Не удалось добавить кота 😿');
     }
   }
 
@@ -28,7 +28,7 @@ class CatRepositoryImpl implements CatRepository {
       }
     } catch (e) {
       debugPrint(e.toString());
-      yield Failure<List<CatModel>>('Не удалось загрузить котов 😿', e);
+      yield Failure<List<CatModel>>('Не удалось загрузить котов 😿');
     }
   }
 
@@ -39,7 +39,7 @@ class CatRepositoryImpl implements CatRepository {
       return Success(data: null);
     } catch (e) {
       debugPrint(e.toString());
-      return Failure<void>('Не удалось обновить кота 😿', e);
+      return Failure<void>('Не удалось обновить кота 😿');
     }
   }
 
@@ -50,7 +50,7 @@ class CatRepositoryImpl implements CatRepository {
       return Success(data: null);
     } catch (e) {
       debugPrint(e.toString());
-      return Failure<void>('Не удалось удалить кота 😿', e);
+      return Failure<void>('Не удалось удалить кота 😿');
     }
   }
 }
