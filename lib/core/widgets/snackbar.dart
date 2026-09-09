@@ -37,9 +37,9 @@ void showErrorSnackbar(BuildContext context, String text) {
       duration: Duration(seconds: 3),
       content: Row(
         children: [
-          Icon(CupertinoIcons.checkmark_circle, color: Colors.white),
+          Icon(Icons.error_outline, color: Colors.white),
           SizedBox(width: 8),
-          Text(text),
+          Expanded(child: Text(text, maxLines: 3, softWrap: true)),
         ],
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
