@@ -104,7 +104,7 @@ class _AddedCatsList extends StatelessWidget {
         Positioned(
           left: 0,
           right: 0,
-          bottom: 90,
+          bottom: 140,
           child: Image.asset(selectedCat.color.imagePath),
         ),
 
@@ -158,7 +158,90 @@ class _AddedCatsList extends StatelessWidget {
             ],
           ),
         ),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 98.h,
+          child: Center(
+            child: _CreateDiaryEntryButton(
+              onTap: () {
+                context.go('/diary/add_entry', extra: selectedCat.id);
+              },
+            ),
+          ),
+        ),
       ],
+    );
+  }
+}
+
+class _CreateDiaryEntryButton extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _CreateDiaryEntryButton({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    return Material(
+      color: Colors.transparent,
+      child: DottedBorder(
+        options: RoundedRectDottedBorderOptions(
+          radius: Radius.circular(34.r),
+          color: colorScheme.primary,
+          strokeWidth: 2,
+          dashPattern: const [6, 5],
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(4.r),
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(28.r),
+            child: Ink(
+              padding: EdgeInsets.fromLTRB(16.w, 10.h, 18.w, 10.h),
+              decoration: BoxDecoration(
+                color: colorScheme.primary,
+                borderRadius: BorderRadius.circular(28.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: colorScheme.primary.withAlpha(75),
+                    blurRadius: 18,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 38.w,
+                    height: 38.w,
+                    decoration: BoxDecoration(
+                      color: colorScheme.onPrimary.withAlpha(34),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      CupertinoIcons.photo_camera,
+                      size: 22.sp,
+                      color: colorScheme.onPrimary,
+                    ),
+                  ),
+                  SizedBox(width: 10.w),
+                  Text(
+                    'Новая запись',
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: colorScheme.onPrimary,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
