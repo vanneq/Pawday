@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kotik/core/di/injection_container.dart';
 import 'package:kotik/core/extension/cat_extension.dart';
 import 'package:kotik/core/extension/day_with_cat_extension.dart';
 import 'package:kotik/core/model/cat/cat_model.dart';
+import 'package:kotik/core/widgets/snackbar.dart';
+import 'package:kotik/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:kotik/features/auth/presentation/cubit/auth_state.dart';
 import 'package:kotik/features/main/presentation/cubit/cats_cubit.dart';
 import 'package:kotik/features/main/presentation/cubit/cats_state.dart';
 import 'package:kotik/features/profile/presentation/widgets/cat_avatar.dart';
@@ -16,7 +20,10 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ProfileView();
+    return BlocProvider(
+      create: (context) => getIt<AuthCubit>(),
+      child: const ProfileView(),
+    );
   }
 }
 
@@ -25,74 +32,88 @@ class ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Профиль',
-          style: Theme.of(context).textTheme.headlineLarge,
-        ),
-        centerTitle: false,
-        actions: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.w),
-            child: InkWell(
-              child: Icon(
-                Icons.settings_outlined,
-                size: 30,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-            ),
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is AuthUnauthenticated) {
+          context.go('/auth');
+        }
+
+        if (state is AuthError) {
+          showErrorSnackbar(context, state.error);
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Профиль',
+            style: Theme.of(context).textTheme.headlineLarge,
           ),
-        ],
-      ),
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.fromLTRB(14.w, 10.h, 14.w, 0),
-                  child: Column(
-                    children: [
-                      BlocBuilder<CatsCubit, CatsState>(
-                        builder: (context, state) {
-                          if (state is CatsLoading) {
-                            return const CircularProgressIndicator();
-                          }
-
-                          if (state is CatsLoadedData) {
-                            return Column(
-                              children: [
-                                _ProfileCard(selectCat: state.selectedCat),
-                                SizedBox(height: 18.h),
-                                CatList(
-                                  cats: state.cats,
-                                  selectedCatId: state.selectedCat?.id,
-                                ),
-                              ],
-                            );
-                          }
-
-                          return Column(
-                            children: [
-                              const _ProfileCard(),
-                              SizedBox(height: 18.h),
-                              const CatList(cats: []),
-                            ],
-                          );
-                        },
-                      ),
-                      SizedBox(height: 18.h),
-                      SettingsColumn(),
-                    ],
-                  ),
+          centerTitle: false,
+          actions: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
+              child: InkWell(
+                child: Icon(
+                  Icons.settings_outlined,
+                  size: 30,
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
               ),
-            );
-          },
+            ),
+          ],
+        ),
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        body: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.fromLTRB(14.w, 10.h, 14.w, 0),
+                    child: Column(
+                      children: [
+                        BlocBuilder<CatsCubit, CatsState>(
+                          builder: (context, state) {
+                            if (state is CatsLoading) {
+                              return const CircularProgressIndicator();
+                            }
+
+                            if (state is CatsLoadedData) {
+                              return Column(
+                                children: [
+                                  _ProfileCard(selectCat: state.selectedCat),
+                                  SizedBox(height: 18.h),
+                                  CatList(
+                                    cats: state.cats,
+                                    selectedCatId: state.selectedCat?.id,
+                                  ),
+                                ],
+                              );
+                            }
+
+                            return Column(
+                              children: [
+                                const _ProfileCard(),
+                                SizedBox(height: 18.h),
+                                const CatList(cats: []),
+                              ],
+                            );
+                          },
+                        ),
+                        SizedBox(height: 18.h),
+                        SettingsColumn(),
+                        SizedBox(height: 12.h),
+                        const LogoutButton(),
+                        SizedBox(height: 16.h),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -373,6 +394,78 @@ class SettingsItem extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class LogoutButton extends StatelessWidget {
+  const LogoutButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final logoutColor = colorScheme.error.withAlpha(210);
+
+    return BlocBuilder<AuthCubit, AuthState>(
+      builder: (context, state) {
+        final isLoading = state is AuthLoading;
+
+        return Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: isLoading ? null : () => context.read<AuthCubit>().logOut(),
+            borderRadius: BorderRadius.circular(12.r),
+            child: Ink(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+              decoration: BoxDecoration(
+                color: colorScheme.onPrimary.withAlpha(150),
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                  color: colorScheme.outline.withAlpha(150),
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 34.r,
+                    height: 34.r,
+                    decoration: BoxDecoration(
+                      color: colorScheme.error.withAlpha(24),
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    child: isLoading
+                        ? Padding(
+                            padding: EdgeInsets.all(8.r),
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: logoutColor,
+                            ),
+                          )
+                        : Icon(
+                            CupertinoIcons.square_arrow_right,
+                            color: logoutColor,
+                            size: 20.sp,
+                          ),
+                  ),
+                  SizedBox(width: 10.w),
+                  Expanded(
+                    child: Text(
+                      'Выйти из аккаунта',
+                      style: textTheme.bodyMedium?.copyWith(
+                        color: logoutColor,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
