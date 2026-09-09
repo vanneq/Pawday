@@ -47,6 +47,8 @@ dependencies:
   riverpod_annotation: ^4.0.3
   cloud_firestore: ^6.9.0
   dotted_border: ^3.1.0
+  firebase_storage: ^13.5.0
+  flutter_image_compress: ^2.5.1
 
 
 dev_dependencies:
