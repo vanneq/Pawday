@@ -6,7 +6,8 @@ import 'package:kotik/core/navigation/nav_bar.dart';
 import 'package:kotik/core/providers/auth_provider.dart';
 import 'package:kotik/features/auth/presentation/pages/login_page.dart';
 import 'package:kotik/features/auth/presentation/pages/register_page.dart';
-import 'package:kotik/features/dairy/presentation/pages/dairy_page.dart';
+import 'package:kotik/features/dairy/presentation/pages/add_entry_page.dart';
+import 'package:kotik/features/dairy/presentation/pages/diary_page.dart';
 import 'package:kotik/features/main/presentation/pages/main_page.dart';
 import 'package:kotik/features/profile/presentation/pages/add_cat_page.dart';
 import 'package:kotik/features/profile/presentation/pages/edit_cat_page.dart';
@@ -51,7 +52,7 @@ final router = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/diary',
             pageBuilder: (context, state) =>
-                const NoTransitionPage(child: DairyPage()),
+                const NoTransitionPage(child: DiaryPage()),
           ),
           GoRoute(
             path: '/profile',
@@ -70,6 +71,13 @@ final router = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) {
           final cat = state.extra as CatModel;
           return NoTransitionPage(child: EditCatPage(cat: cat));
+        },
+      ),
+      GoRoute(
+        path: '/diary/add_entry',
+        pageBuilder: (context, state) {
+          final catId = state.extra as String;
+          return NoTransitionPage(child: AddEntryPage(catId: catId));
         },
       ),
     ],
