@@ -63,6 +63,7 @@ class DiaryCubit extends Cubit<DiaryState> {
     currentDiaryList = currentDiaryList
         .where((entry) => entry.id != entryId)
         .toList();
+    emit(const DiaryState.edited());
     _emitLoadedData();
   }
 

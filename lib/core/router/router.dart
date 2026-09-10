@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kotik/core/model/cat/cat_model.dart';
+import 'package:kotik/core/model/diary/diary_model.dart';
 import 'package:kotik/core/navigation/nav_bar.dart';
 import 'package:kotik/core/providers/auth_provider.dart';
 import 'package:kotik/features/auth/presentation/pages/login_page.dart';
 import 'package:kotik/features/auth/presentation/pages/register_page.dart';
 import 'package:kotik/features/dairy/presentation/pages/add_entry_page.dart';
+import 'package:kotik/features/dairy/presentation/pages/diary_entry_details_page.dart';
 import 'package:kotik/features/dairy/presentation/pages/diary_page.dart';
 import 'package:kotik/features/main/presentation/pages/main_page.dart';
 import 'package:kotik/features/profile/presentation/pages/add_cat_page.dart';
@@ -78,6 +80,13 @@ final router = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) {
           final catId = state.extra as String;
           return NoTransitionPage(child: AddEntryPage(catId: catId));
+        },
+      ),
+      GoRoute(
+        path: '/diary/entry',
+        pageBuilder: (context, state) {
+          final entry = state.extra as DiaryModel;
+          return NoTransitionPage(child: DiaryEntryDetailsPage(entry: entry));
         },
       ),
     ],

@@ -37,13 +37,12 @@ class DiaryDatasource {
       await ref.putFile(fileToUpload!);
       imageUrl = await ref.getDownloadURL();
     }
-    final docRef = firestore
+    final catRef = firestore
         .collection('users')
         .doc(userId)
         .collection('cats')
-        .doc(catId)
-        .collection('entries')
-        .doc();
+        .doc(catId);
+    final docRef = catRef.collection('entries').doc();
 
     final createdEntry = DiaryModel(
       id: docRef.id,
@@ -53,7 +52,11 @@ class DiaryDatasource {
       description: diaryEntry.description,
       mood: diaryEntry.mood,
     );
-    return await docRef.set(createdEntry.toJson());
+
+    final batch = firestore.batch();
+    batch.set(docRef, createdEntry.toJson());
+    batch.update(catRef, {'dairyEntries': FieldValue.increment(1)});
+    return await batch.commit();
   }
 
   Stream<List<DiaryModel>> watchDiary(String userId, String catId) {
@@ -72,14 +75,17 @@ class DiaryDatasource {
   }
 
   Future<void> deleteEntry(String userId, String catId, String entryId) async {
-    return firestore
+    final catRef = firestore
         .collection('users')
         .doc(userId)
         .collection('cats')
-        .doc(catId)
-        .collection('entries')
-        .doc(entryId)
-        .delete();
+        .doc(catId);
+    final entryRef = catRef.collection('entries').doc(entryId);
+
+    final batch = firestore.batch();
+    batch.delete(entryRef);
+    batch.update(catRef, {'dairyEntries': FieldValue.increment(-1)});
+    return await batch.commit();
   }
 
   Future<void> updateEntry(

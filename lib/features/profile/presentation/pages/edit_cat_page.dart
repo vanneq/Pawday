@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,6 +9,7 @@ import 'package:kotik/core/widgets/primary_button.dart';
 import 'package:kotik/core/widgets/snackbar.dart';
 import 'package:kotik/features/main/presentation/cubit/cats_cubit.dart';
 import 'package:kotik/features/main/presentation/cubit/cats_state.dart';
+import 'package:kotik/features/profile/presentation/pages/add_cat_page.dart';
 import 'package:kotik/features/profile/presentation/widgets/cat_avatar.dart';
 
 class EditCatPage extends StatefulWidget {
@@ -485,43 +484,6 @@ class CharacterRow extends StatelessWidget {
           }).toList(),
         ),
       ],
-    );
-  }
-}
-
-class CharacterItem extends StatelessWidget {
-  final String title;
-  final CatCharacter character;
-  final bool isSelected;
-
-  const CharacterItem({
-    super.key,
-    required this.title,
-    required this.character,
-    required this.isSelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: isSelected
-            ? Theme.of(context).colorScheme.primary
-            : Colors.transparent,
-        border: Border.all(
-          color: isSelected
-              ? Colors.transparent
-              : Theme.of(context).colorScheme.outline,
-        ),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-      child: Text(
-        title,
-        style: isSelected
-            ? Theme.of(context).textTheme.labelLarge
-            : Theme.of(context).textTheme.bodyMedium,
-      ),
     );
   }
 }

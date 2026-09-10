@@ -55,7 +55,7 @@ extension DiaryStatePatterns on DiaryState {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( DiaryInitial value)?  initial,TResult Function( DiaryLoading value)?  loading,TResult Function( DiaryLoadedData value)?  loadedData,TResult Function( DiaryError value)?  error,TResult Function( DiaryAdding value)?  adding,TResult Function( DiaryAdded value)?  added,TResult Function( DiaryEditing value)?  editing,TResult Function( DiaryEdited value)?  edited,TResult Function( DiarySelected value)?  selected,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( DiaryInitial value)?  initial,TResult Function( DiaryLoading value)?  loading,TResult Function( DiaryLoadedData value)?  loadedData,TResult Function( DiaryError value)?  error,TResult Function( DiaryAdding value)?  adding,TResult Function( DiaryAdded value)?  added,TResult Function( DiaryEditing value)?  editing,TResult Function( DiaryEdited value)?  edited,TResult Function( DiaryDeleted value)?  deleted,TResult Function( DiarySelected value)?  selected,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case DiaryInitial() when initial != null:
@@ -66,7 +66,8 @@ return error(_that);case DiaryAdding() when adding != null:
 return adding(_that);case DiaryAdded() when added != null:
 return added(_that);case DiaryEditing() when editing != null:
 return editing(_that);case DiaryEdited() when edited != null:
-return edited(_that);case DiarySelected() when selected != null:
+return edited(_that);case DiaryDeleted() when deleted != null:
+return deleted(_that);case DiarySelected() when selected != null:
 return selected(_that);case _:
   return orElse();
 
@@ -85,7 +86,7 @@ return selected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( DiaryInitial value)  initial,required TResult Function( DiaryLoading value)  loading,required TResult Function( DiaryLoadedData value)  loadedData,required TResult Function( DiaryError value)  error,required TResult Function( DiaryAdding value)  adding,required TResult Function( DiaryAdded value)  added,required TResult Function( DiaryEditing value)  editing,required TResult Function( DiaryEdited value)  edited,required TResult Function( DiarySelected value)  selected,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( DiaryInitial value)  initial,required TResult Function( DiaryLoading value)  loading,required TResult Function( DiaryLoadedData value)  loadedData,required TResult Function( DiaryError value)  error,required TResult Function( DiaryAdding value)  adding,required TResult Function( DiaryAdded value)  added,required TResult Function( DiaryEditing value)  editing,required TResult Function( DiaryEdited value)  edited,required TResult Function( DiaryDeleted value)  deleted,required TResult Function( DiarySelected value)  selected,}){
 final _that = this;
 switch (_that) {
 case DiaryInitial():
@@ -96,7 +97,8 @@ return error(_that);case DiaryAdding():
 return adding(_that);case DiaryAdded():
 return added(_that);case DiaryEditing():
 return editing(_that);case DiaryEdited():
-return edited(_that);case DiarySelected():
+return edited(_that);case DiaryDeleted():
+return deleted(_that);case DiarySelected():
 return selected(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
@@ -111,7 +113,7 @@ return selected(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( DiaryInitial value)?  initial,TResult? Function( DiaryLoading value)?  loading,TResult? Function( DiaryLoadedData value)?  loadedData,TResult? Function( DiaryError value)?  error,TResult? Function( DiaryAdding value)?  adding,TResult? Function( DiaryAdded value)?  added,TResult? Function( DiaryEditing value)?  editing,TResult? Function( DiaryEdited value)?  edited,TResult? Function( DiarySelected value)?  selected,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( DiaryInitial value)?  initial,TResult? Function( DiaryLoading value)?  loading,TResult? Function( DiaryLoadedData value)?  loadedData,TResult? Function( DiaryError value)?  error,TResult? Function( DiaryAdding value)?  adding,TResult? Function( DiaryAdded value)?  added,TResult? Function( DiaryEditing value)?  editing,TResult? Function( DiaryEdited value)?  edited,TResult? Function( DiaryDeleted value)?  deleted,TResult? Function( DiarySelected value)?  selected,}){
 final _that = this;
 switch (_that) {
 case DiaryInitial() when initial != null:
@@ -122,7 +124,8 @@ return error(_that);case DiaryAdding() when adding != null:
 return adding(_that);case DiaryAdded() when added != null:
 return added(_that);case DiaryEditing() when editing != null:
 return editing(_that);case DiaryEdited() when edited != null:
-return edited(_that);case DiarySelected() when selected != null:
+return edited(_that);case DiaryDeleted() when deleted != null:
+return deleted(_that);case DiarySelected() when selected != null:
 return selected(_that);case _:
   return null;
 
@@ -140,7 +143,7 @@ return selected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<DiaryModel> diaryEntries)?  loadedData,TResult Function( String error)?  error,TResult Function()?  adding,TResult Function()?  added,TResult Function()?  editing,TResult Function()?  edited,TResult Function()?  selected,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<DiaryModel> diaryEntries)?  loadedData,TResult Function( String error)?  error,TResult Function()?  adding,TResult Function()?  added,TResult Function()?  editing,TResult Function()?  edited,TResult Function()?  deleted,TResult Function()?  selected,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case DiaryInitial() when initial != null:
 return initial();case DiaryLoading() when loading != null:
@@ -150,7 +153,8 @@ return error(_that.error);case DiaryAdding() when adding != null:
 return adding();case DiaryAdded() when added != null:
 return added();case DiaryEditing() when editing != null:
 return editing();case DiaryEdited() when edited != null:
-return edited();case DiarySelected() when selected != null:
+return edited();case DiaryDeleted() when deleted != null:
+return deleted();case DiarySelected() when selected != null:
 return selected();case _:
   return orElse();
 
@@ -169,7 +173,7 @@ return selected();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<DiaryModel> diaryEntries)  loadedData,required TResult Function( String error)  error,required TResult Function()  adding,required TResult Function()  added,required TResult Function()  editing,required TResult Function()  edited,required TResult Function()  selected,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<DiaryModel> diaryEntries)  loadedData,required TResult Function( String error)  error,required TResult Function()  adding,required TResult Function()  added,required TResult Function()  editing,required TResult Function()  edited,required TResult Function()  deleted,required TResult Function()  selected,}) {final _that = this;
 switch (_that) {
 case DiaryInitial():
 return initial();case DiaryLoading():
@@ -179,7 +183,8 @@ return error(_that.error);case DiaryAdding():
 return adding();case DiaryAdded():
 return added();case DiaryEditing():
 return editing();case DiaryEdited():
-return edited();case DiarySelected():
+return edited();case DiaryDeleted():
+return deleted();case DiarySelected():
 return selected();}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -194,7 +199,7 @@ return selected();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<DiaryModel> diaryEntries)?  loadedData,TResult? Function( String error)?  error,TResult? Function()?  adding,TResult? Function()?  added,TResult? Function()?  editing,TResult? Function()?  edited,TResult? Function()?  selected,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<DiaryModel> diaryEntries)?  loadedData,TResult? Function( String error)?  error,TResult? Function()?  adding,TResult? Function()?  added,TResult? Function()?  editing,TResult? Function()?  edited,TResult? Function()?  deleted,TResult? Function()?  selected,}) {final _that = this;
 switch (_that) {
 case DiaryInitial() when initial != null:
 return initial();case DiaryLoading() when loading != null:
@@ -204,7 +209,8 @@ return error(_that.error);case DiaryAdding() when adding != null:
 return adding();case DiaryAdded() when added != null:
 return added();case DiaryEditing() when editing != null:
 return editing();case DiaryEdited() when edited != null:
-return edited();case DiarySelected() when selected != null:
+return edited();case DiaryDeleted() when deleted != null:
+return deleted();case DiarySelected() when selected != null:
 return selected();case _:
   return null;
 
@@ -535,6 +541,38 @@ int get hashCode => runtimeType.hashCode;
 @override
 String toString() {
   return 'DiaryState.edited()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class DiaryDeleted implements DiaryState {
+  const DiaryDeleted();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DiaryDeleted);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'DiaryState.deleted()';
 }
 
 

@@ -1,4 +1,4 @@
-﻿import 'dart:math';
+﻿import 'dart:io';
 import 'dart:ui';
 
 import 'package:dotted_border/dotted_border.dart';
@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:kotik/core/di/injection_container.dart';
 import 'package:kotik/core/extension/entry_mood_extension.dart';
 import 'package:kotik/core/model/diary/diary_model.dart';
@@ -39,6 +40,8 @@ class AddEntryView extends StatefulWidget {
 
 class _AddEntryViewState extends State<AddEntryView> {
   final TextEditingController controller = TextEditingController();
+  final ImagePicker _imagePicker = ImagePicker();
+  File? _selectedImageFile;
   DateTime _selectedDate = DateTime.now();
   CatMood _selectedMood = CatMood.funny;
 
@@ -92,7 +95,10 @@ class _AddEntryViewState extends State<AddEntryView> {
                           children: [
                             _Header(),
                             SizedBox(height: 20.h),
-                            _UploadPhotoContainer(),
+                            _UploadPhotoContainer(
+                              imageFile: _selectedImageFile,
+                              onTap: _showPhotoSourcePicker,
+                            ),
                             SizedBox(height: 28.h),
                             _DescriptionContainer(controller: controller),
                             SizedBox(height: 28.h),
@@ -128,6 +134,7 @@ class _AddEntryViewState extends State<AddEntryView> {
                                   createdAt: _selectedDate,
                                   description: controller.text.trim(),
                                   mood: _selectedMood,
+                                  imageFile: _selectedImageFile,
                                 );
                                 context.read<DiaryCubit>().addEntry(newDiary);
                               },
@@ -142,6 +149,143 @@ class _AddEntryViewState extends State<AddEntryView> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _pickImage() async {
+    await _pickImageFromSource(ImageSource.gallery);
+  }
+
+  Future<void> _takePhoto() async {
+    await _pickImageFromSource(ImageSource.camera);
+  }
+
+  Future<void> _pickImageFromSource(ImageSource source) async {
+    try {
+      final pickedImage = await _imagePicker.pickImage(
+        source: source,
+        imageQuality: 100,
+      );
+
+      if (pickedImage == null || !mounted) return;
+
+      setState(() {
+        _selectedImageFile = File(pickedImage.path);
+      });
+    } catch (error, stackTrace) {
+      debugPrint('Pick image error: $error');
+      debugPrintStack(stackTrace: stackTrace);
+      if (!mounted) return;
+      showErrorSnackbar(context, 'Не удалось выбрать фото');
+    }
+  }
+
+  void _showPhotoSourcePicker() {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return _PhotoSourceSheet(
+          onCameraTap: () {
+            context.pop();
+            _takePhoto();
+          },
+          onGalleryTap: () {
+            context.pop();
+            _pickImage();
+          },
+        );
+      },
+    );
+  }
+}
+
+class _PhotoSourceSheet extends StatelessWidget {
+  final VoidCallback onCameraTap;
+  final VoidCallback onGalleryTap;
+
+  const _PhotoSourceSheet({
+    required this.onCameraTap,
+    required this.onGalleryTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorTheme = Theme.of(context).colorScheme;
+
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: colorTheme.surface,
+            borderRadius: BorderRadius.circular(24.r),
+            border: Border.all(color: colorTheme.outline.withAlpha(90)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withAlpha(28),
+                blurRadius: 18,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 10.h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _PhotoSourceTile(
+                  icon: CupertinoIcons.camera,
+                  title: 'Сделать фото',
+                  onTap: onCameraTap,
+                ),
+                _PhotoSourceTile(
+                  icon: CupertinoIcons.photo,
+                  title: 'Выбрать из галереи',
+                  onTap: onGalleryTap,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _PhotoSourceTile extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final VoidCallback onTap;
+
+  const _PhotoSourceTile({
+    required this.icon,
+    required this.title,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorTheme = Theme.of(context).colorScheme;
+
+    return ListTile(
+      onTap: onTap,
+      leading: Container(
+        width: 42.w,
+        height: 42.w,
+        decoration: BoxDecoration(
+          color: colorTheme.primary.withAlpha(28),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(icon, color: colorTheme.primary, size: 24.sp),
+      ),
+      title: Text(
+        title,
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+          color: colorTheme.onTertiary,
+          fontWeight: FontWeight.w700,
         ),
       ),
     );
@@ -181,80 +325,144 @@ class _Header extends StatelessWidget {
 }
 
 class _UploadPhotoContainer extends StatelessWidget {
+  final File? imageFile;
+  final VoidCallback onTap;
+
+  const _UploadPhotoContainer({required this.imageFile, required this.onTap});
+
   @override
   Widget build(BuildContext context) {
     final colorTheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final bgAddImageButton = Color.fromARGB(255, 250, 233, 210);
 
-    return DottedBorder(
-      options: RoundedRectDottedBorderOptions(
-        radius: Radius.circular(34.r),
-        color: colorTheme.outline,
-        strokeWidth: 2,
-        dashPattern: const [6, 5],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(28.r),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-          child: Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: 30.h),
-            decoration: BoxDecoration(
-              color: colorTheme.outline.withAlpha(20),
-              borderRadius: BorderRadius.circular(28.r),
-              border: Border.all(color: Colors.white.withAlpha(100), width: 1),
-            ),
-            child: Column(
-              children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Icon(
-                      CupertinoIcons.photo,
-                      color: colorTheme.secondary,
-                      size: 70,
-                    ),
-                    Positioned(
-                      right: -12.w,
-                      bottom: -6.h,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          color: bgAddImageButton,
-                        ),
-                        padding: EdgeInsets.all(5.r),
-                        child: Container(
-                          padding: EdgeInsets.all(2.r),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            color: colorTheme.primary,
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: DottedBorder(
+        options: RoundedRectDottedBorderOptions(
+          radius: Radius.circular(34.r),
+          color: colorTheme.outline,
+          strokeWidth: 2,
+          dashPattern: const [6, 5],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(28.r),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 30.h),
+              decoration: BoxDecoration(
+                color: colorTheme.outline.withAlpha(20),
+                borderRadius: BorderRadius.circular(28.r),
+                border: Border.all(
+                  color: Colors.white.withAlpha(100),
+                  width: 1,
+                ),
+              ),
+              child: Column(
+                children: [
+                  if (imageFile != null)
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(18.r),
+                          child: Image.file(
+                            imageFile!,
+                            width: 118.w,
+                            height: 96.h,
+                            fit: BoxFit.cover,
                           ),
-                          child: Icon(CupertinoIcons.add, color: Colors.white),
                         ),
-                      ),
+                        Positioned(
+                          right: -8.w,
+                          bottom: -8.h,
+                          child: _AddPhotoBadge(
+                            backgroundColor: bgAddImageButton,
+                            iconColor: colorTheme.onPrimary,
+                            color: colorTheme.primary,
+                            icon: CupertinoIcons.pencil,
+                          ),
+                        ),
+                      ],
+                    )
+                  else
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Icon(
+                          CupertinoIcons.photo,
+                          color: colorTheme.secondary,
+                          size: 70,
+                        ),
+                        Positioned(
+                          right: -12.w,
+                          bottom: -6.h,
+                          child: _AddPhotoBadge(
+                            backgroundColor: bgAddImageButton,
+                            iconColor: Colors.white,
+                            color: colorTheme.primary,
+                            icon: CupertinoIcons.add,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                SizedBox(height: 6.h),
-                Text(
-                  'Добавить фото',
-                  style: textTheme.bodyLarge!.copyWith(
-                    color: colorTheme.onTertiary,
+                  SizedBox(height: 6.h),
+                  Text(
+                    imageFile == null ? 'Добавить фото' : 'Фото выбрано',
+                    style: textTheme.bodyLarge!.copyWith(
+                      color: colorTheme.onTertiary,
+                    ),
                   ),
-                ),
-                Text(
-                  'Нажмите, чтобы выбрать фото',
-                  style: textTheme.bodyLarge!.copyWith(
-                    color: colorTheme.secondary,
-                    fontSize: 14,
+                  Text(
+                    imageFile == null
+                        ? 'Нажмите, чтобы выбрать фото'
+                        : 'Нажмите, чтобы заменить фото',
+                    style: textTheme.bodyLarge!.copyWith(
+                      color: colorTheme.secondary,
+                      fontSize: 14,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _AddPhotoBadge extends StatelessWidget {
+  final Color backgroundColor;
+  final Color color;
+  final Color iconColor;
+  final IconData icon;
+
+  const _AddPhotoBadge({
+    required this.backgroundColor,
+    required this.color,
+    required this.iconColor,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(100),
+        color: backgroundColor,
+      ),
+      padding: EdgeInsets.all(5.r),
+      child: Container(
+        padding: EdgeInsets.all(2.r),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(100),
+          color: color,
+        ),
+        child: Icon(icon, color: iconColor),
       ),
     );
   }

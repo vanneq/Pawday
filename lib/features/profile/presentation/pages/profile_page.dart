@@ -43,25 +43,6 @@ class ProfileView extends StatelessWidget {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Профиль',
-            style: Theme.of(context).textTheme.headlineLarge,
-          ),
-          centerTitle: false,
-          actions: [
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10.w),
-              child: InkWell(
-                child: Icon(
-                  Icons.settings_outlined,
-                  size: 30,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-              ),
-            ),
-          ],
-        ),
         backgroundColor: Theme.of(context).colorScheme.surface,
         body: SafeArea(
           child: LayoutBuilder(
@@ -83,6 +64,8 @@ class ProfileView extends StatelessWidget {
                             if (state is CatsLoadedData) {
                               return Column(
                                 children: [
+                                  _Header(),
+                                  SizedBox(height: 18.h),
                                   _ProfileCard(selectCat: state.selectedCat),
                                   SizedBox(height: 18.h),
                                   CatList(
@@ -116,6 +99,28 @@ class ProfileView extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text('Профиль', style: Theme.of(context).textTheme.headlineLarge),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 10.w),
+          child: InkWell(
+            child: Icon(
+              Icons.settings_outlined,
+              size: 30,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
