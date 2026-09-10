@@ -119,30 +119,17 @@ class _EntryDetailsHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        GestureDetector(
-          onTap: () => context.pop(),
-          behavior: HitTestBehavior.opaque,
-          child: Padding(
-            padding: EdgeInsets.all(6.r),
-            child: Icon(
-              Icons.arrow_back_ios,
-              size: 22.sp,
-              color: colorScheme.onTertiary,
-            ),
-          ),
+    return GestureDetector(
+      onTap: () => context.pop(),
+      behavior: HitTestBehavior.opaque,
+      child: Padding(
+        padding: EdgeInsets.all(6.r),
+        child: Icon(
+          Icons.arrow_back_ios,
+          size: 22.sp,
+          color: colorScheme.onTertiary,
         ),
-        Padding(
-          padding: EdgeInsets.all(6.r),
-          child: Icon(
-            CupertinoIcons.ellipsis,
-            size: 24.sp,
-            color: colorScheme.onTertiary,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
@@ -298,10 +285,14 @@ class _EntryDetailsActions extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(
-            CupertinoIcons.share,
-            color: colorScheme.onTertiary,
-            size: 21.sp,
+          GestureDetector(
+            onTap: () => context.push('/diary/edit_entry', extra: entry),
+            behavior: HitTestBehavior.opaque,
+            child: Icon(
+              Icons.tune,
+              color: colorScheme.onTertiary,
+              size: 21.sp,
+            ),
           ),
           GestureDetector(
             onTap: () => _showDeleteEntryDialog(context),
@@ -340,10 +331,7 @@ class _DeleteEntryDialog extends StatelessWidget {
   final VoidCallback onCancel;
   final VoidCallback onDelete;
 
-  const _DeleteEntryDialog({
-    required this.onCancel,
-    required this.onDelete,
-  });
+  const _DeleteEntryDialog({required this.onCancel, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -392,13 +380,9 @@ class _DeleteEntryDialog extends StatelessWidget {
             SizedBox(height: 18.h),
             Row(
               children: [
-                Expanded(
-                  child: _DeleteEntryCancelButton(onPressed: onCancel),
-                ),
+                Expanded(child: _DeleteEntryCancelButton(onPressed: onCancel)),
                 SizedBox(width: 10.w),
-                Expanded(
-                  child: _DeleteEntryConfirmButton(onPressed: onDelete),
-                ),
+                Expanded(child: _DeleteEntryConfirmButton(onPressed: onDelete)),
               ],
             ),
           ],
@@ -420,11 +404,7 @@ class _DeleteEntryDialogIcon extends StatelessWidget {
         color: colorScheme.error.withAlpha(24),
         shape: BoxShape.circle,
       ),
-      child: Icon(
-        CupertinoIcons.trash,
-        color: colorScheme.error,
-        size: 24.sp,
-      ),
+      child: Icon(CupertinoIcons.trash, color: colorScheme.error, size: 24.sp),
     );
   }
 }
