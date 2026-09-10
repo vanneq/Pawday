@@ -10,10 +10,12 @@ import 'package:kotik/features/auth/presentation/pages/register_page.dart';
 import 'package:kotik/features/dairy/presentation/pages/add_entry_page.dart';
 import 'package:kotik/features/dairy/presentation/pages/diary_entry_details_page.dart';
 import 'package:kotik/features/dairy/presentation/pages/diary_page.dart';
+import 'package:kotik/features/dairy/presentation/pages/edit_entry_page.dart';
 import 'package:kotik/features/main/presentation/pages/main_page.dart';
 import 'package:kotik/features/profile/presentation/pages/add_cat_page.dart';
 import 'package:kotik/features/profile/presentation/pages/edit_cat_page.dart';
 import 'package:kotik/features/profile/presentation/pages/profile_page.dart';
+import 'package:kotik/features/splash/presentation/splash_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -23,13 +25,35 @@ final router = Provider<GoRouter>((ref) {
 
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
-    initialLocation: '/register',
-    redirect: (context, state) {
-      final isLoggedIn = authState.value != null;
-      final isAuthFlow = ['/login', '/register'].contains(state.uri.toString());
+    initialLocation: '/splash',
 
-      if (!isLoggedIn && !isAuthFlow) return '/login';
-      if (isLoggedIn && isAuthFlow) return '/main';
+    redirect: (context, state) {
+      final location = state.uri.path;
+
+      final isSplash = location == '/splash';
+      final isAuthFlow = location == '/login' || location == '/register';
+
+      if (authState.isLoading) {
+        return isSplash ? null : '/splash';
+      }
+
+      final isLoggedIn = authState.value != null;
+
+      if (isSplash) {
+        return null;
+      }
+
+      if (!isLoggedIn) {
+        if (isAuthFlow) return null;
+        return '/login';
+      }
+
+      if (isLoggedIn) {
+        if (isAuthFlow) {
+          return '/main';
+        }
+      }
+
       return null;
     },
     routes: [
@@ -87,6 +111,19 @@ final router = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) {
           final entry = state.extra as DiaryModel;
           return NoTransitionPage(child: DiaryEntryDetailsPage(entry: entry));
+        },
+      ),
+      GoRoute(
+        path: '/diary/edit_entry',
+        pageBuilder: (context, state) {
+          final entry = state.extra as DiaryModel;
+          return NoTransitionPage(child: EditEntryPage(entry: entry));
+        },
+      ),
+      GoRoute(
+        path: '/splash',
+        pageBuilder: (context, state) {
+          return NoTransitionPage(child: SplashScreen());
         },
       ),
     ],
