@@ -49,6 +49,7 @@ dependencies:
   dotted_border: ^3.1.0
   firebase_storage: ^13.5.0
   flutter_image_compress: ^2.5.1
+  image_picker: ^1.2.3
 
 
 dev_dependencies:
