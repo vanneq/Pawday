@@ -73,83 +73,98 @@ class _AddEntryViewState extends State<AddEntryView> {
           showErrorSnackbar(context, state.error);
         }
       },
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        body: Stack(
-          children: [
-            Positioned.fill(
-              child: Image.asset('assets/diary_bg.png', fit: BoxFit.fill),
-            ),
-            SafeArea(
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  return SingleChildScrollView(
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minHeight: constraints.maxHeight,
-                      ),
-                      child: Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 0),
-                        child: Column(
-                          children: [
-                            _Header(),
-                            SizedBox(height: 20.h),
-                            _UploadPhotoContainer(
-                              imageFile: _selectedImageFile,
-                              onTap: _showPhotoSourcePicker,
-                            ),
-                            SizedBox(height: 28.h),
-                            _DescriptionContainer(controller: controller),
-                            SizedBox(height: 28.h),
-                            _Calendar(
-                              selectedDate: _selectedDate,
-                              onDateChanged: (date) {
-                                setState(() => _selectedDate = date);
-                              },
-                            ),
+      child: BlocBuilder<DiaryCubit, DiaryState>(
+        builder: (context, state) {
+          final isLoading = state is DiaryAdding;
 
-                            SizedBox(height: 28.h),
-                            _SelectMood(
-                              selectedMood: _selectedMood,
-                              onChanged: (mood) {
-                                setState(() => _selectedMood = mood);
-                              },
-                            ),
-                            SizedBox(height: 28.h),
-                            PrimaryButton(
-                              text: 'Создать запись',
-                              isActive: controller.text.trim().isNotEmpty,
-                              onPressed: () async {
-                                if (controller.text.trim().isEmpty) {
-                                  showErrorSnackbar(
-                                    context,
-                                    'Заполните описание',
-                                  );
-                                  return;
-                                }
-
-                                final newDiary = DiaryParams(
-                                  catId: widget.catId,
-                                  createdAt: _selectedDate,
-                                  description: controller.text.trim(),
-                                  mood: _selectedMood,
+          return Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            body: Stack(
+              children: [
+                Positioned.fill(
+                  child: Image.asset('assets/diary_bg.png', fit: BoxFit.fill),
+                ),
+                SafeArea(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return SingleChildScrollView(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: constraints.maxHeight,
+                          ),
+                          child: Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 0),
+                            child: Column(
+                              children: [
+                                _Header(),
+                                SizedBox(height: 20.h),
+                                _UploadPhotoContainer(
                                   imageFile: _selectedImageFile,
-                                );
-                                context.read<DiaryCubit>().addEntry(newDiary);
-                              },
+                                  onTap: isLoading
+                                      ? () {}
+                                      : _showPhotoSourcePicker,
+                                ),
+                                SizedBox(height: 28.h),
+                                _DescriptionContainer(controller: controller),
+                                SizedBox(height: 28.h),
+                                _Calendar(
+                                  selectedDate: _selectedDate,
+                                  onDateChanged: (date) {
+                                    if (isLoading) return;
+                                    setState(() => _selectedDate = date);
+                                  },
+                                ),
+
+                                SizedBox(height: 28.h),
+                                _SelectMood(
+                                  selectedMood: _selectedMood,
+                                  onChanged: (mood) {
+                                    if (isLoading) return;
+                                    setState(() => _selectedMood = mood);
+                                  },
+                                ),
+                                SizedBox(height: 28.h),
+                                PrimaryButton(
+                                  text: 'Создать запись',
+                                  isLoading: isLoading,
+                                  isActive: controller.text.trim().isNotEmpty,
+                                  onPressed: () async {
+                                    if (isLoading) return;
+
+                                    if (controller.text.trim().isEmpty) {
+                                      showErrorSnackbar(
+                                        context,
+                                        'Заполните описание',
+                                      );
+                                      return;
+                                    }
+
+                                    final newDiary = DiaryParams(
+                                      catId: widget.catId,
+                                      createdAt: _selectedDate,
+                                      description: controller.text.trim(),
+                                      mood: _selectedMood,
+                                      imageFile: _selectedImageFile,
+                                    );
+                                    context.read<DiaryCubit>().addEntry(
+                                      newDiary,
+                                    );
+                                  },
+                                ),
+                                SizedBox(height: 16.h),
+                              ],
                             ),
-                            SizedBox(height: 16.h),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  );
-                },
-              ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

@@ -12,7 +12,6 @@ import 'package:kotik/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:kotik/features/auth/presentation/cubit/auth_state.dart';
 import 'package:kotik/features/main/presentation/cubit/cats_cubit.dart';
 import 'package:kotik/features/main/presentation/cubit/cats_state.dart';
-import 'package:kotik/features/profile/presentation/widgets/cat_avatar.dart';
 import 'package:kotik/features/profile/presentation/widgets/cat_selector.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -133,6 +132,12 @@ class _ProfileCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final isSmallScreen = MediaQuery.of(context).size.width < 380;
+    final profileAvatarSize = isSmallScreen ? 94.w : 84.w;
+    final profileCatScale = isSmallScreen ? 1.04 : 1.0;
+    final profileCatOffset = isSmallScreen
+        ? Offset(4.w, 13.h)
+        : Offset(4.w, 14.h);
 
     return Column(
       children: [
@@ -145,7 +150,10 @@ class _ProfileCard extends StatelessWidget {
           ),
           child: Row(
             children: [
-              CatAvatar(
+              _ProfileCatAvatar(
+                size: profileAvatarSize,
+                imageScale: profileCatScale,
+                imageOffset: profileCatOffset,
                 asset:
                     selectCat?.color.imagePath ?? 'assets/cats/empty_cat.png',
               ),
@@ -265,6 +273,43 @@ class _ProfileCard extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _ProfileCatAvatar extends StatelessWidget {
+  final double size;
+  final String asset;
+  final double imageScale;
+  final Offset imageOffset;
+
+  const _ProfileCatAvatar({
+    required this.size,
+    required this.asset,
+    required this.imageScale,
+    required this.imageOffset,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: colorScheme.surface,
+        border: Border.all(color: colorScheme.outline.withAlpha(150)),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Transform.translate(
+        offset: imageOffset,
+        child: Transform.scale(
+          scale: imageScale,
+          child: Image.asset(asset, fit: BoxFit.cover),
+        ),
+      ),
     );
   }
 }

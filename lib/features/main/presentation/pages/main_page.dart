@@ -99,78 +99,88 @@ class _AddedCatsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          left: 0,
-          right: 0,
-          bottom: 140,
-          child: Image.asset(selectedCat.color.imagePath),
-        ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final metrics = _MainStackMetrics.fromConstraints(constraints);
 
-        Positioned(
-          left: 0,
-          right: 0,
-          top: 100,
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 20.w),
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.onSecondary,
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(
-                color: Theme.of(context).colorScheme.outline,
-                width: 1.5,
+        return Stack(
+          children: [
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: metrics.catBottom,
+              child: Image.asset(
+                selectedCat.color.imagePath,
+                height: metrics.catHeight,
+                fit: BoxFit.contain,
               ),
             ),
-            child: Text(
-              '${selectedCat.name} вас заждался!',
-              style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                fontWeight: FontWeight.w800,
-                color: Theme.of(context).colorScheme.onTertiary,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-        Positioned(
-          left: 0,
-          right: 0,
-          top: 170,
-          child: Column(
-            children: [
-              Text(
-                'Дней с котом:',
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  fontWeight: FontWeight.w800,
-                  color: Theme.of(context).colorScheme.onTertiary,
+
+            Positioned(
+              left: 0,
+              right: 0,
+              top: metrics.titleTop,
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 20.w),
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.onSecondary,
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.outline,
+                    width: 1.5,
+                  ),
                 ),
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                '${selectedCat?.daysWithCat ?? 0}',
-                style: Theme.of(context).textTheme.displayLarge!.copyWith(
-                  fontWeight: FontWeight.w800,
-                  color: Theme.of(context).colorScheme.onTertiary,
+                child: Text(
+                  '${selectedCat.name} вас заждался!',
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: Theme.of(context).colorScheme.onTertiary,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
-            ],
-          ),
-        ),
-        Positioned(
-          left: 0,
-          right: 0,
-          bottom: 98.h,
-          child: Center(
-            child: _CreateDiaryEntryButton(
-              onTap: () {
-                context.go('/diary/add_entry', extra: selectedCat.id);
-              },
             ),
-          ),
-        ),
-      ],
+            Positioned(
+              left: 0,
+              right: 0,
+              top: metrics.daysTop,
+              child: Column(
+                children: [
+                  Text(
+                    'Дней с котом:',
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: Theme.of(context).colorScheme.onTertiary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    '${selectedCat.daysWithCat}',
+                    style: Theme.of(context).textTheme.displayLarge!.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: Theme.of(context).colorScheme.onTertiary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: metrics.buttonBottom,
+              child: Center(
+                child: _CreateDiaryEntryButton(
+                  onTap: () {
+                    context.go('/diary/add_entry', extra: selectedCat.id);
+                  },
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -251,81 +261,180 @@ class _NotAddedCats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          left: 0,
-          right: 0,
-          bottom: 130,
-          child: Opacity(
-            opacity: 0.55,
-            child: Image.asset('assets/cats/empty_cat.png'),
-          ),
-        ),
-        Positioned(
-          left: 10,
-          right: 44,
-          bottom: 254,
-          child: Center(
-            child: DottedBorder(
-              options: CircularDottedBorderOptions(
-                color: Theme.of(context).colorScheme.primary,
-                strokeWidth: 1.5,
-                dashPattern: const [5, 4],
-              ),
-              child: Container(
-                width: 54.w,
-                height: 54.w,
-                margin: EdgeInsets.all(3.w),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Theme.of(context).colorScheme.primary,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final metrics = _MainStackMetrics.fromConstraints(constraints);
+
+        return Stack(
+          children: [
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: metrics.emptyCatBottom,
+              child: Opacity(
+                opacity: 0.55,
+                child: Image.asset(
+                  'assets/cats/empty_cat.png',
+                  height: metrics.emptyCatHeight,
+                  fit: BoxFit.contain,
                 ),
-                child: Material(
-                  color: Colors.transparent,
-                  shape: const CircleBorder(),
-                  child: InkWell(
-                    customBorder: const CircleBorder(),
-                    onTap: () {
-                      context.go('/profile');
-                    },
-                    child: Icon(
-                      CupertinoIcons.add,
-                      size: 34.sp,
-                      color: Theme.of(context).colorScheme.onPrimary,
+              ),
+            ),
+            Positioned(
+              left: 10,
+              right: 44,
+              bottom: metrics.emptyAddButtonBottom,
+              child: Center(
+                child: DottedBorder(
+                  options: CircularDottedBorderOptions(
+                    color: Theme.of(context).colorScheme.primary,
+                    strokeWidth: 1.5,
+                    dashPattern: const [5, 4],
+                  ),
+                  child: Container(
+                    width: metrics.emptyAddButtonSize,
+                    height: metrics.emptyAddButtonSize,
+                    margin: EdgeInsets.all(3.w),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    child: Material(
+                      color: Colors.transparent,
+                      shape: const CircleBorder(),
+                      child: InkWell(
+                        customBorder: const CircleBorder(),
+                        onTap: () {
+                          context.go('/profile');
+                        },
+                        child: Icon(
+                          CupertinoIcons.add,
+                          size: metrics.emptyAddIconSize,
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ),
-        Positioned(
-          left: 0,
-          right: 0,
-          top: 100,
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 20.w),
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.onSecondary,
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(
-                color: Theme.of(context).colorScheme.outline,
-                width: 1.5,
+            Positioned(
+              left: 0,
+              right: 0,
+              top: metrics.titleTop,
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 20.w),
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.onSecondary,
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.outline,
+                    width: 1.5,
+                  ),
+                ),
+                child: Text(
+                  'Добавьте вашего \n питомца 🐾',
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: Theme.of(context).colorScheme.onTertiary,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
             ),
-            child: Text(
-              'Добавьте вашего \n питомца 🐾',
-              style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                fontWeight: FontWeight.w800,
-                color: Theme.of(context).colorScheme.onTertiary,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _MainStackMetrics {
+  final double titleTop;
+  final double daysTop;
+  final double catBottom;
+  final double catHeight;
+  final double buttonBottom;
+  final double emptyCatBottom;
+  final double emptyCatHeight;
+  final double emptyAddButtonBottom;
+  final double emptyAddButtonSize;
+  final double emptyAddIconSize;
+
+  const _MainStackMetrics({
+    required this.titleTop,
+    required this.daysTop,
+    required this.catBottom,
+    required this.catHeight,
+    required this.buttonBottom,
+    required this.emptyCatBottom,
+    required this.emptyCatHeight,
+    required this.emptyAddButtonBottom,
+    required this.emptyAddButtonSize,
+    required this.emptyAddIconSize,
+  });
+
+  factory _MainStackMetrics.fromConstraints(BoxConstraints constraints) {
+    final width = constraints.maxWidth;
+    final height = constraints.maxHeight;
+
+    if (width < 360) {
+      return _MainStackMetrics(
+        titleTop: 72.h,
+        daysTop: 132.h,
+        catBottom: 200.h,
+        catHeight: (height * 0.34).clamp(221.h, 281.h).toDouble(),
+        buttonBottom: 146.h,
+        emptyCatBottom: 104.h,
+        emptyCatHeight: height * 0.42,
+        emptyAddButtonBottom: 218.h,
+        emptyAddButtonSize: 48.w,
+        emptyAddIconSize: 30.sp,
+      );
+    }
+
+    if (width < 380) {
+      return _MainStackMetrics(
+        titleTop: 82.h,
+        daysTop: 146.h,
+        catBottom: 202.h,
+        catHeight: (height * 0.36).clamp(238.h, 298.h).toDouble(),
+        buttonBottom: 130.h,
+        emptyCatBottom: 112.h,
+        emptyCatHeight: height * 0.44,
+        emptyAddButtonBottom: 232.h,
+        emptyAddButtonSize: 50.w,
+        emptyAddIconSize: 32.sp,
+      );
+    }
+
+    if (width < 420) {
+      return _MainStackMetrics(
+        titleTop: 100.h,
+        daysTop: 170.h,
+        catBottom: 180.h,
+        catHeight: (height * 0.39).clamp(255.h, 323.h).toDouble(),
+        buttonBottom: 98.h,
+        emptyCatBottom: 126.h,
+        emptyCatHeight: height * 0.47,
+        emptyAddButtonBottom: 252.h,
+        emptyAddButtonSize: 54.w,
+        emptyAddIconSize: 34.sp,
+      );
+    }
+
+    return _MainStackMetrics(
+      titleTop: 106.h,
+      daysTop: 176.h,
+      catBottom: 182.h,
+      catHeight: (height * 0.41).clamp(272.h, 332.h).toDouble(),
+      buttonBottom: 102.h,
+      emptyCatBottom: 132.h,
+      emptyCatHeight: height * 0.48,
+      emptyAddButtonBottom: 260.h,
+      emptyAddButtonSize: 54.w,
+      emptyAddIconSize: 34.sp,
     );
   }
 }

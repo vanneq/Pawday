@@ -177,7 +177,7 @@ class _MoodRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 40.h,
+      height: 48.h,
       child: ListView(
         scrollDirection: Axis.horizontal,
         physics: const ClampingScrollPhysics(),
@@ -224,6 +224,7 @@ class _MoodItem extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
+      constraints: BoxConstraints(minHeight: 40.h),
       decoration: BoxDecoration(
         color: isSelected
             ? colorScheme.primary
@@ -233,7 +234,7 @@ class _MoodItem extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(12.r),
       ),
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 9.h),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
