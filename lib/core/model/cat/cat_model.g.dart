@@ -11,6 +11,7 @@ _CatModel _$CatModelFromJson(Map<String, dynamic> json) => _CatModel(
   name: json['name'] as String,
   createdAt: DateTime.parse(json['createdAt'] as String),
   color: $enumDecode(_$CatColorationEnumMap, json['color']),
+  hungry: (json['hungry'] as num).toInt(),
   dairyEntries: (json['dairyEntries'] as num).toInt(),
   character: $enumDecodeNullable(_$CatCharacterEnumMap, json['character']),
 );
@@ -20,6 +21,7 @@ Map<String, dynamic> _$CatModelToJson(_CatModel instance) => <String, dynamic>{
   'name': instance.name,
   'createdAt': instance.createdAt.toIso8601String(),
   'color': _$CatColorationEnumMap[instance.color]!,
+  'hungry': instance.hungry,
   'dairyEntries': instance.dairyEntries,
   'character': _$CatCharacterEnumMap[instance.character],
 };

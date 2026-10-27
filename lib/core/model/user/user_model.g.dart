@@ -16,6 +16,11 @@ _UserModel _$UserModelFromJson(Map<String, dynamic> json) => _UserModel(
   allCats: (json['allCats'] as List<dynamic>?)
       ?.map((e) => CatModel.fromJson(e as Map<String, dynamic>))
       .toList(),
+  foodCount:
+      (json['foodCount'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, (e as num).toInt()),
+      ) ??
+      const <String, int>{},
 );
 
 Map<String, dynamic> _$UserModelToJson(_UserModel instance) =>
@@ -25,6 +30,7 @@ Map<String, dynamic> _$UserModelToJson(_UserModel instance) =>
       'createdAt': instance.createdAt.toIso8601String(),
       'activeCat': instance.activeCat,
       'allCats': instance.allCats,
+      'foodCount': instance.foodCount,
     };
 
 _AuthParams _$AuthParamsFromJson(Map<String, dynamic> json) => _AuthParams(

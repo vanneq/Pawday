@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserModel {
 
- String get uid; String get email; DateTime get createdAt; CatModel? get activeCat; List<CatModel>? get allCats;
+ String get uid; String get email; DateTime get createdAt; CatModel? get activeCat; List<CatModel>? get allCats; Map<String, int> get foodCount;
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $UserModelCopyWith<UserModel> get copyWith => _$UserModelCopyWithImpl<UserModel>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserModel&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.email, email) || other.email == email)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.activeCat, activeCat) || other.activeCat == activeCat)&&const DeepCollectionEquality().equals(other.allCats, allCats));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserModel&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.email, email) || other.email == email)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.activeCat, activeCat) || other.activeCat == activeCat)&&const DeepCollectionEquality().equals(other.allCats, allCats)&&const DeepCollectionEquality().equals(other.foodCount, foodCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,uid,email,createdAt,activeCat,const DeepCollectionEquality().hash(allCats));
+int get hashCode => Object.hash(runtimeType,uid,email,createdAt,activeCat,const DeepCollectionEquality().hash(allCats),const DeepCollectionEquality().hash(foodCount));
 
 @override
 String toString() {
-  return 'UserModel(uid: $uid, email: $email, createdAt: $createdAt, activeCat: $activeCat, allCats: $allCats)';
+  return 'UserModel(uid: $uid, email: $email, createdAt: $createdAt, activeCat: $activeCat, allCats: $allCats, foodCount: $foodCount)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $UserModelCopyWith<$Res>  {
   factory $UserModelCopyWith(UserModel value, $Res Function(UserModel) _then) = _$UserModelCopyWithImpl;
 @useResult
 $Res call({
- String uid, String email, DateTime createdAt, CatModel? activeCat, List<CatModel>? allCats
+ String uid, String email, DateTime createdAt, CatModel? activeCat, List<CatModel>? allCats, Map<String, int> foodCount
 });
 
 
@@ -65,14 +65,15 @@ class _$UserModelCopyWithImpl<$Res>
 
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? uid = null,Object? email = null,Object? createdAt = null,Object? activeCat = freezed,Object? allCats = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? uid = null,Object? email = null,Object? createdAt = null,Object? activeCat = freezed,Object? allCats = freezed,Object? foodCount = null,}) {
   return _then(_self.copyWith(
 uid: null == uid ? _self.uid : uid // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,activeCat: freezed == activeCat ? _self.activeCat : activeCat // ignore: cast_nullable_to_non_nullable
 as CatModel?,allCats: freezed == allCats ? _self.allCats : allCats // ignore: cast_nullable_to_non_nullable
-as List<CatModel>?,
+as List<CatModel>?,foodCount: null == foodCount ? _self.foodCount : foodCount // ignore: cast_nullable_to_non_nullable
+as Map<String, int>,
   ));
 }
 /// Create a copy of UserModel
@@ -169,10 +170,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String uid,  String email,  DateTime createdAt,  CatModel? activeCat,  List<CatModel>? allCats)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String uid,  String email,  DateTime createdAt,  CatModel? activeCat,  List<CatModel>? allCats,  Map<String, int> foodCount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserModel() when $default != null:
-return $default(_that.uid,_that.email,_that.createdAt,_that.activeCat,_that.allCats);case _:
+return $default(_that.uid,_that.email,_that.createdAt,_that.activeCat,_that.allCats,_that.foodCount);case _:
   return orElse();
 
 }
@@ -190,10 +191,10 @@ return $default(_that.uid,_that.email,_that.createdAt,_that.activeCat,_that.allC
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String uid,  String email,  DateTime createdAt,  CatModel? activeCat,  List<CatModel>? allCats)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String uid,  String email,  DateTime createdAt,  CatModel? activeCat,  List<CatModel>? allCats,  Map<String, int> foodCount)  $default,) {final _that = this;
 switch (_that) {
 case _UserModel():
-return $default(_that.uid,_that.email,_that.createdAt,_that.activeCat,_that.allCats);case _:
+return $default(_that.uid,_that.email,_that.createdAt,_that.activeCat,_that.allCats,_that.foodCount);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -210,10 +211,10 @@ return $default(_that.uid,_that.email,_that.createdAt,_that.activeCat,_that.allC
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String uid,  String email,  DateTime createdAt,  CatModel? activeCat,  List<CatModel>? allCats)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String uid,  String email,  DateTime createdAt,  CatModel? activeCat,  List<CatModel>? allCats,  Map<String, int> foodCount)?  $default,) {final _that = this;
 switch (_that) {
 case _UserModel() when $default != null:
-return $default(_that.uid,_that.email,_that.createdAt,_that.activeCat,_that.allCats);case _:
+return $default(_that.uid,_that.email,_that.createdAt,_that.activeCat,_that.allCats,_that.foodCount);case _:
   return null;
 
 }
@@ -225,7 +226,7 @@ return $default(_that.uid,_that.email,_that.createdAt,_that.activeCat,_that.allC
 @JsonSerializable()
 
 class _UserModel implements UserModel {
-  const _UserModel({required this.uid, required this.email, required this.createdAt, this.activeCat, final  List<CatModel>? allCats}): _allCats = allCats;
+  const _UserModel({required this.uid, required this.email, required this.createdAt, this.activeCat, final  List<CatModel>? allCats, final  Map<String, int> foodCount = const <String, int>{}}): _allCats = allCats,_foodCount = foodCount;
   factory _UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
 
 @override final  String uid;
@@ -239,6 +240,13 @@ class _UserModel implements UserModel {
   if (_allCats is EqualUnmodifiableListView) return _allCats;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(value);
+}
+
+ final  Map<String, int> _foodCount;
+@override@JsonKey() Map<String, int> get foodCount {
+  if (_foodCount is EqualUnmodifiableMapView) return _foodCount;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_foodCount);
 }
 
 
@@ -255,16 +263,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserModel&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.email, email) || other.email == email)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.activeCat, activeCat) || other.activeCat == activeCat)&&const DeepCollectionEquality().equals(other._allCats, _allCats));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserModel&&(identical(other.uid, uid) || other.uid == uid)&&(identical(other.email, email) || other.email == email)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.activeCat, activeCat) || other.activeCat == activeCat)&&const DeepCollectionEquality().equals(other._allCats, _allCats)&&const DeepCollectionEquality().equals(other._foodCount, _foodCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,uid,email,createdAt,activeCat,const DeepCollectionEquality().hash(_allCats));
+int get hashCode => Object.hash(runtimeType,uid,email,createdAt,activeCat,const DeepCollectionEquality().hash(_allCats),const DeepCollectionEquality().hash(_foodCount));
 
 @override
 String toString() {
-  return 'UserModel(uid: $uid, email: $email, createdAt: $createdAt, activeCat: $activeCat, allCats: $allCats)';
+  return 'UserModel(uid: $uid, email: $email, createdAt: $createdAt, activeCat: $activeCat, allCats: $allCats, foodCount: $foodCount)';
 }
 
 
@@ -275,7 +283,7 @@ abstract mixin class _$UserModelCopyWith<$Res> implements $UserModelCopyWith<$Re
   factory _$UserModelCopyWith(_UserModel value, $Res Function(_UserModel) _then) = __$UserModelCopyWithImpl;
 @override @useResult
 $Res call({
- String uid, String email, DateTime createdAt, CatModel? activeCat, List<CatModel>? allCats
+ String uid, String email, DateTime createdAt, CatModel? activeCat, List<CatModel>? allCats, Map<String, int> foodCount
 });
 
 
@@ -292,14 +300,15 @@ class __$UserModelCopyWithImpl<$Res>
 
 /// Create a copy of UserModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? uid = null,Object? email = null,Object? createdAt = null,Object? activeCat = freezed,Object? allCats = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? uid = null,Object? email = null,Object? createdAt = null,Object? activeCat = freezed,Object? allCats = freezed,Object? foodCount = null,}) {
   return _then(_UserModel(
 uid: null == uid ? _self.uid : uid // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,activeCat: freezed == activeCat ? _self.activeCat : activeCat // ignore: cast_nullable_to_non_nullable
 as CatModel?,allCats: freezed == allCats ? _self._allCats : allCats // ignore: cast_nullable_to_non_nullable
-as List<CatModel>?,
+as List<CatModel>?,foodCount: null == foodCount ? _self._foodCount : foodCount // ignore: cast_nullable_to_non_nullable
+as Map<String, int>,
   ));
 }
 

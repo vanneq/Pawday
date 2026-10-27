@@ -11,6 +11,7 @@ abstract class UserModel with _$UserModel {
     required DateTime createdAt,
     CatModel? activeCat,
     List<CatModel>? allCats,
+    @Default(<String, int>{}) Map<String, int> foodCount,
   }) = _UserModel;
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);

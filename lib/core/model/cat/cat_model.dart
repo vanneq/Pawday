@@ -14,7 +14,7 @@ abstract class CatModel with _$CatModel {
     required String name,
     required DateTime createdAt,
     required CatColoration color,
-
+    required int hungry,
     required int dairyEntries,
     CatCharacter? character,
   }) = _CatModel;
@@ -26,7 +26,7 @@ class CreateCatParams {
   final String name;
   final DateTime createdAt;
   final CatColoration color;
-
+  final int hungry;
   final int dairyEntries;
   final CatCharacter? character;
 
@@ -36,5 +36,6 @@ class CreateCatParams {
     required this.color,
     required this.dairyEntries,
     this.character,
+    this.hungry = 60,
   });
 }

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CatModel {
 
- String get id; String get name; DateTime get createdAt; CatColoration get color; int get dairyEntries; CatCharacter? get character;
+ String get id; String get name; DateTime get createdAt; CatColoration get color; int get hungry; int get dairyEntries; CatCharacter? get character;
 /// Create a copy of CatModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $CatModelCopyWith<CatModel> get copyWith => _$CatModelCopyWithImpl<CatModel>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CatModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.color, color) || other.color == color)&&(identical(other.dairyEntries, dairyEntries) || other.dairyEntries == dairyEntries)&&(identical(other.character, character) || other.character == character));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CatModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.color, color) || other.color == color)&&(identical(other.hungry, hungry) || other.hungry == hungry)&&(identical(other.dairyEntries, dairyEntries) || other.dairyEntries == dairyEntries)&&(identical(other.character, character) || other.character == character));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,createdAt,color,dairyEntries,character);
+int get hashCode => Object.hash(runtimeType,id,name,createdAt,color,hungry,dairyEntries,character);
 
 @override
 String toString() {
-  return 'CatModel(id: $id, name: $name, createdAt: $createdAt, color: $color, dairyEntries: $dairyEntries, character: $character)';
+  return 'CatModel(id: $id, name: $name, createdAt: $createdAt, color: $color, hungry: $hungry, dairyEntries: $dairyEntries, character: $character)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $CatModelCopyWith<$Res>  {
   factory $CatModelCopyWith(CatModel value, $Res Function(CatModel) _then) = _$CatModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, DateTime createdAt, CatColoration color, int dairyEntries, CatCharacter? character
+ String id, String name, DateTime createdAt, CatColoration color, int hungry, int dairyEntries, CatCharacter? character
 });
 
 
@@ -65,13 +65,14 @@ class _$CatModelCopyWithImpl<$Res>
 
 /// Create a copy of CatModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? createdAt = null,Object? color = null,Object? dairyEntries = null,Object? character = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? createdAt = null,Object? color = null,Object? hungry = null,Object? dairyEntries = null,Object? character = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,color: null == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
-as CatColoration,dairyEntries: null == dairyEntries ? _self.dairyEntries : dairyEntries // ignore: cast_nullable_to_non_nullable
+as CatColoration,hungry: null == hungry ? _self.hungry : hungry // ignore: cast_nullable_to_non_nullable
+as int,dairyEntries: null == dairyEntries ? _self.dairyEntries : dairyEntries // ignore: cast_nullable_to_non_nullable
 as int,character: freezed == character ? _self.character : character // ignore: cast_nullable_to_non_nullable
 as CatCharacter?,
   ));
@@ -158,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  DateTime createdAt,  CatColoration color,  int dairyEntries,  CatCharacter? character)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  DateTime createdAt,  CatColoration color,  int hungry,  int dairyEntries,  CatCharacter? character)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CatModel() when $default != null:
-return $default(_that.id,_that.name,_that.createdAt,_that.color,_that.dairyEntries,_that.character);case _:
+return $default(_that.id,_that.name,_that.createdAt,_that.color,_that.hungry,_that.dairyEntries,_that.character);case _:
   return orElse();
 
 }
@@ -179,10 +180,10 @@ return $default(_that.id,_that.name,_that.createdAt,_that.color,_that.dairyEntri
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  DateTime createdAt,  CatColoration color,  int dairyEntries,  CatCharacter? character)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  DateTime createdAt,  CatColoration color,  int hungry,  int dairyEntries,  CatCharacter? character)  $default,) {final _that = this;
 switch (_that) {
 case _CatModel():
-return $default(_that.id,_that.name,_that.createdAt,_that.color,_that.dairyEntries,_that.character);case _:
+return $default(_that.id,_that.name,_that.createdAt,_that.color,_that.hungry,_that.dairyEntries,_that.character);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +200,10 @@ return $default(_that.id,_that.name,_that.createdAt,_that.color,_that.dairyEntri
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  DateTime createdAt,  CatColoration color,  int dairyEntries,  CatCharacter? character)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  DateTime createdAt,  CatColoration color,  int hungry,  int dairyEntries,  CatCharacter? character)?  $default,) {final _that = this;
 switch (_that) {
 case _CatModel() when $default != null:
-return $default(_that.id,_that.name,_that.createdAt,_that.color,_that.dairyEntries,_that.character);case _:
+return $default(_that.id,_that.name,_that.createdAt,_that.color,_that.hungry,_that.dairyEntries,_that.character);case _:
   return null;
 
 }
@@ -214,13 +215,14 @@ return $default(_that.id,_that.name,_that.createdAt,_that.color,_that.dairyEntri
 @JsonSerializable()
 
 class _CatModel implements CatModel {
-  const _CatModel({required this.id, required this.name, required this.createdAt, required this.color, required this.dairyEntries, this.character});
+  const _CatModel({required this.id, required this.name, required this.createdAt, required this.color, required this.hungry, required this.dairyEntries, this.character});
   factory _CatModel.fromJson(Map<String, dynamic> json) => _$CatModelFromJson(json);
 
 @override final  String id;
 @override final  String name;
 @override final  DateTime createdAt;
 @override final  CatColoration color;
+@override final  int hungry;
 @override final  int dairyEntries;
 @override final  CatCharacter? character;
 
@@ -237,16 +239,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CatModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.color, color) || other.color == color)&&(identical(other.dairyEntries, dairyEntries) || other.dairyEntries == dairyEntries)&&(identical(other.character, character) || other.character == character));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CatModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.color, color) || other.color == color)&&(identical(other.hungry, hungry) || other.hungry == hungry)&&(identical(other.dairyEntries, dairyEntries) || other.dairyEntries == dairyEntries)&&(identical(other.character, character) || other.character == character));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,createdAt,color,dairyEntries,character);
+int get hashCode => Object.hash(runtimeType,id,name,createdAt,color,hungry,dairyEntries,character);
 
 @override
 String toString() {
-  return 'CatModel(id: $id, name: $name, createdAt: $createdAt, color: $color, dairyEntries: $dairyEntries, character: $character)';
+  return 'CatModel(id: $id, name: $name, createdAt: $createdAt, color: $color, hungry: $hungry, dairyEntries: $dairyEntries, character: $character)';
 }
 
 
@@ -257,7 +259,7 @@ abstract mixin class _$CatModelCopyWith<$Res> implements $CatModelCopyWith<$Res>
   factory _$CatModelCopyWith(_CatModel value, $Res Function(_CatModel) _then) = __$CatModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, DateTime createdAt, CatColoration color, int dairyEntries, CatCharacter? character
+ String id, String name, DateTime createdAt, CatColoration color, int hungry, int dairyEntries, CatCharacter? character
 });
 
 
@@ -274,13 +276,14 @@ class __$CatModelCopyWithImpl<$Res>
 
 /// Create a copy of CatModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? createdAt = null,Object? color = null,Object? dairyEntries = null,Object? character = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? createdAt = null,Object? color = null,Object? hungry = null,Object? dairyEntries = null,Object? character = freezed,}) {
   return _then(_CatModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,color: null == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
-as CatColoration,dairyEntries: null == dairyEntries ? _self.dairyEntries : dairyEntries // ignore: cast_nullable_to_non_nullable
+as CatColoration,hungry: null == hungry ? _self.hungry : hungry // ignore: cast_nullable_to_non_nullable
+as int,dairyEntries: null == dairyEntries ? _self.dairyEntries : dairyEntries // ignore: cast_nullable_to_non_nullable
 as int,character: freezed == character ? _self.character : character // ignore: cast_nullable_to_non_nullable
 as CatCharacter?,
   ));
