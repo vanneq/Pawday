@@ -109,16 +109,6 @@ class _Header extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text('Профиль', style: Theme.of(context).textTheme.headlineLarge),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 10.w),
-          child: InkWell(
-            child: Icon(
-              Icons.settings_outlined,
-              size: 30,
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-          ),
-        ),
       ],
     );
   }

@@ -71,8 +71,7 @@ class _DiaryViewState extends State<DiaryView> {
                               if (catsState is! CatsLoadedData ||
                                   catsState.selectedCat == null) {
                                 return const _EmptyDiaryText(
-                                  text:
-                                      'Выберите котика, чтобы увидеть записи',
+                                  text: 'Выберите котика, чтобы увидеть записи',
                                 );
                               }
 
@@ -153,16 +152,16 @@ class _Header extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text('Дневник', style: Theme.of(context).textTheme.headlineLarge),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 10.w),
-          child: InkWell(
-            child: Icon(
-              Icons.tune,
-              size: 30,
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-          ),
-        ),
+        // Container(
+        //   padding: EdgeInsets.symmetric(horizontal: 10.w),
+        //   child: InkWell(
+        //     child: Icon(
+        //       Icons.tune,
+        //       size: 30,
+        //       color: Theme.of(context).colorScheme.secondary,
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }
@@ -492,4 +491,3 @@ String _monthName(int month) {
 
   return months[month - 1];
 }
-

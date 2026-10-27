@@ -11,6 +11,7 @@ import 'package:kotik/features/dairy/presentation/pages/add_entry_page.dart';
 import 'package:kotik/features/dairy/presentation/pages/diary_entry_details_page.dart';
 import 'package:kotik/features/dairy/presentation/pages/diary_page.dart';
 import 'package:kotik/features/dairy/presentation/pages/edit_entry_page.dart';
+import 'package:kotik/features/main/presentation/pages/hungry_page.dart';
 import 'package:kotik/features/main/presentation/pages/main_page.dart';
 import 'package:kotik/features/profile/presentation/pages/add_cat_page.dart';
 import 'package:kotik/features/profile/presentation/pages/edit_cat_page.dart';
@@ -124,6 +125,14 @@ final router = Provider<GoRouter>((ref) {
         path: '/splash',
         pageBuilder: (context, state) {
           return NoTransitionPage(child: SplashScreen());
+        },
+      ),
+      GoRoute(
+        path: '/main/hungry_page',
+        pageBuilder: (context, state) {
+          final cat = state.extra as CatModel;
+
+          return NoTransitionPage(child: HungryPage(selectCat: cat));
         },
       ),
     ],

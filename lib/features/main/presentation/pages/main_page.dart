@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kotik/core/di/injection_container.dart';
 import 'package:kotik/core/extension/cat_extension.dart';
-import 'package:kotik/core/extension/day_with_cat_extension.dart';
+
 import 'package:kotik/core/model/cat/cat_model.dart';
 import 'package:kotik/core/widgets/snackbar.dart';
 import 'package:kotik/features/auth/presentation/cubit/auth_cubit.dart';
@@ -93,6 +93,50 @@ class MainView extends StatelessWidget {
   }
 }
 
+class _HungryBox extends StatelessWidget {
+  final CatModel cat;
+  const _HungryBox({required this.cat});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 6.w),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.r),
+            color: Theme.of(context).colorScheme.surface,
+          ),
+
+          child: Image.asset('assets/cup.png', height: 50.h),
+        ),
+        SizedBox(width: 8.w),
+        Text(
+          'Сытость: ',
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+            fontWeight: FontWeight.w800,
+            fontSize: 22,
+            color: Theme.of(context).colorScheme.onSurface.withAlpha(190),
+          ),
+        ),
+        Text(
+          "${cat.hungry.toString()}%",
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+            fontWeight: FontWeight.w800,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+        Spacer(),
+        Icon(
+          Icons.arrow_forward_ios_outlined,
+          color: Theme.of(context).colorScheme.onSurface.withAlpha(190),
+          size: 20,
+        ),
+      ],
+    );
+  }
+}
+
 class _AddedCatsList extends StatelessWidget {
   final CatModel selectedCat;
   const _AddedCatsList({required this.selectedCat});
@@ -120,52 +164,28 @@ class _AddedCatsList extends StatelessWidget {
               left: 0,
               right: 0,
               top: metrics.titleTop,
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 20.w),
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onSecondary,
-                  borderRadius: BorderRadius.circular(18),
-                  border: Border.all(
-                    color: Theme.of(context).colorScheme.outline,
-                    width: 1.5,
+              child: GestureDetector(
+                onTap: () =>
+                    context.push('main/hungry_page', extra: selectedCat),
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20.w),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 12.h,
                   ),
-                ),
-                child: Text(
-                  '${selectedCat.name} вас заждался!',
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    fontWeight: FontWeight.w800,
-                    color: Theme.of(context).colorScheme.onTertiary,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.onSecondary,
+                    borderRadius: BorderRadius.circular(26.r),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.outline,
+                      width: 1.5,
+                    ),
                   ),
-                  textAlign: TextAlign.center,
+                  child: _HungryBox(cat: selectedCat),
                 ),
               ),
             ),
-            Positioned(
-              left: 0,
-              right: 0,
-              top: metrics.daysTop,
-              child: Column(
-                children: [
-                  Text(
-                    'Дней с котом:',
-                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: Theme.of(context).colorScheme.onTertiary,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    '${selectedCat.daysWithCat}',
-                    style: Theme.of(context).textTheme.displayLarge!.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: Theme.of(context).colorScheme.onTertiary,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
+
             Positioned(
               left: 0,
               right: 0,
