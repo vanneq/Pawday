@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kotik/core/app/app.dart';
 import 'package:kotik/core/di/injection_container.dart';
+import 'package:kotik/core/services/notification_sevice.dart';
 import 'package:kotik/firebase_options.dart';
 
 void main() async {
@@ -13,6 +14,7 @@ void main() async {
 
   final container = ProviderContainer();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await NotificationService.initialize();
   await configureDependencies(onUnathorized: () async {});
 
   runApp(
