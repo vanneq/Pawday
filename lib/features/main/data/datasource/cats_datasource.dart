@@ -21,6 +21,7 @@ class CatsDatasource {
 
       dairyEntries: cat.dairyEntries,
       character: cat.character,
+      hungry: cat.hungry,
     );
     return await docRef.set(createdCat.toJson());
   }
