@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kotik/core/di/injection_container.dart';
 import 'package:kotik/core/extension/cat_extension.dart';
 import 'package:kotik/core/model/cat/cat_model.dart';
 import 'package:kotik/core/model/food/food_model.dart';
 import 'package:kotik/core/widgets/primary_button.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:kotik/core/widgets/snackbar.dart';
+import 'package:kotik/features/main/presentation/cubit/food_cubit.dart';
+import 'package:kotik/features/main/presentation/cubit/food_state.dart';
 import 'package:kotik/features/main/presentation/widgets/food_selector.dart';
 
 class HungryPage extends StatelessWidget {
@@ -15,7 +20,18 @@ class HungryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HungryView(selectCat: selectCat);
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) {
+            final cubit = getIt<FoodCubit>();
+            cubit.watchInventory();
+            return cubit;
+          },
+        ),
+      ],
+      child: HungryView(selectCat: selectCat),
+    );
   }
 }
 
@@ -37,61 +53,81 @@ class _HungryViewState extends State<HungryView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.tertiary,
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset('assets/diary_bg.png', fit: BoxFit.fill),
-          ),
-          SafeArea(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return SingleChildScrollView(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: constraints.maxHeight,
-                    ),
-                    child: Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.fromLTRB(12.w, 8.h, 12.w, 0),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              GestureDetector(
-                                child: Icon(Icons.arrow_back_ios_new),
-                                onTap: () => context.pop(),
-                              ),
-                              SizedBox(width: 18.w),
-                              Text(
-                                'Голод',
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.headlineLarge,
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 20.h),
-                          _HungryProfileRow(selectCat: widget.selectCat),
-                          SizedBox(height: 14.h),
-                          _NewEntryFoodCard(catName: widget.selectCat.name),
-                          SizedBox(height: 20.h),
-                          _MyFoodList(
-                            catId: widget.selectCat.id,
-                            selectedFood: _selectedFood,
-                            onFoodSelected: _onFoodSelected,
-                          ),
-                          SizedBox(height: 14.h),
-                        ],
+    return BlocListener<FoodCubit, FoodState>(
+      listener: (BuildContext context, state) {
+        if (state is FoodLoading) {
+          CircularProgressIndicator();
+        }
+        if (state is FoodError) {
+          showErrorSnackbar(context, state.error);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
+        body: Stack(
+          children: [
+            Positioned.fill(
+              child: Image.asset('assets/diary_bg.png', fit: BoxFit.fill),
+            ),
+            SafeArea(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
+                      ),
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.fromLTRB(12.w, 8.h, 12.w, 0),
+                        child: BlocBuilder<FoodCubit, FoodState>(
+                          builder: (BuildContext context, state) {
+                            return Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    GestureDetector(
+                                      child: Icon(Icons.arrow_back_ios_new),
+                                      onTap: () => context.pop(),
+                                    ),
+                                    SizedBox(width: 18.w),
+                                    Text(
+                                      'Голод',
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.headlineLarge,
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 20.h),
+                                _HungryProfileRow(selectCat: widget.selectCat),
+                                SizedBox(height: 14.h),
+                                _NewEntryFoodCard(
+                                  catName: widget.selectCat.name,
+                                ),
+                                SizedBox(height: 20.h),
+                                if (state is FoodsLoadedData)
+                                  _MyFoodList(
+                                    inventory: state.inventory,
+                                    isOperationProgress:
+                                        state.isOperationProgress,
+                                    catId: widget.selectCat.id,
+                                    selectedFood: _selectedFood,
+                                    onFoodSelected: _onFoodSelected,
+                                  ),
+                                SizedBox(height: 14.h),
+                              ],
+                            );
+                          },
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -101,16 +137,23 @@ class _MyFoodList extends StatelessWidget {
   final String catId;
   final FoodModel? selectedFood;
   final ValueChanged<FoodModel> onFoodSelected;
+  final Map<FoodType, int> inventory;
+  final bool isOperationProgress;
 
   const _MyFoodList({
     required this.catId,
     required this.selectedFood,
     required this.onFoodSelected,
+    required this.inventory,
+    required this.isOperationProgress,
   });
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final selectedFoodQuantity = selectedFood == null
+        ? 0
+        : inventory[selectedFood!.type] ?? 0;
 
     return Column(
       children: [
@@ -123,12 +166,51 @@ class _MyFoodList extends StatelessWidget {
         ),
         SizedBox(height: 10.h),
         FoodSelector(
+          inventory: inventory,
           foods: foods,
           selectedFood: selectedFood,
           onFoodSelected: onFoodSelected,
         ),
         SizedBox(height: 10.h),
-        PrimaryButton(text: 'Покормить', onPressed: () {}),
+        PrimaryButton(
+          text: 'Покормить',
+          isLoading: isOperationProgress,
+          onPressed: () async {
+            final food = selectedFood;
+            if (food == null) return;
+
+            final wasFed = await context
+                .read<FoodCubit>()
+                .feedCat(catId, food.type);
+            if (!context.mounted || !wasFed) return;
+
+            await showGeneralDialog<void>(
+              context: context,
+              barrierDismissible: true,
+              barrierLabel: 'Котик поел',
+              barrierColor: Colors.black.withAlpha(100),
+              transitionDuration: const Duration(milliseconds: 450),
+              pageBuilder: (context, animation, secondaryAnimation) {
+                return _FeedSuccessDialog(food: food);
+              },
+              transitionBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                final curvedAnimation = CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.elasticOut,
+                );
+                return FadeTransition(
+                  opacity: animation,
+                  child: ScaleTransition(
+                    scale: curvedAnimation,
+                    child: child,
+                  ),
+                );
+              },
+            );
+          },
+          isActive: selectedFoodQuantity > 0,
+        ),
         SizedBox(height: 6.h),
         if (selectedFood != null)
           Text(
@@ -142,6 +224,92 @@ class _MyFoodList extends StatelessWidget {
         SizedBox(height: 8.h),
         const _FoodDropInfoCard(),
       ],
+    );
+  }
+}
+
+class _FeedSuccessDialog extends StatelessWidget {
+  final FoodModel food;
+
+  const _FeedSuccessDialog({required this.food});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: EdgeInsets.symmetric(horizontal: 36.w),
+      child: Container(
+        padding: EdgeInsets.fromLTRB(24.w, 28.h, 24.w, 22.h),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFF5E5),
+          borderRadius: BorderRadius.circular(28.r),
+          border: Border.all(color: colorScheme.outline.withAlpha(90)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                Icon(
+                  Icons.auto_awesome,
+                  size: 100.sp,
+                  color: colorScheme.primary.withAlpha(35),
+                ),
+                TweenAnimationBuilder<double>(
+                  tween: Tween(begin: -0.12, end: 0),
+                  duration: const Duration(milliseconds: 650),
+                  curve: Curves.elasticOut,
+                  builder: (context, angle, child) => Transform.rotate(
+                    angle: angle,
+                    child: child,
+                  ),
+                  child: Image.asset(
+                    food.imagePath,
+                    width: 94.w,
+                    height: 94.w,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              'Ням!',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                color: colorScheme.onSurface,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            SizedBox(height: 4.h),
+            Text(
+              'Котику понравилось угощение',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurface.withAlpha(170),
+              ),
+            ),
+            SizedBox(height: 18.h),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colorScheme.primary,
+                  foregroundColor: colorScheme.onPrimary,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24.r),
+                  ),
+                ),
+                child: const Text('Ура!'),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -192,7 +360,7 @@ class _NewEntryFoodCard extends StatelessWidget {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  'Фотографируйте и записывайте приключения $catName, чтобы получать еду для него!',
+                  'Фотографируйте и записывайте приключения $catName, чтобы получать еду!',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontSize: 14,
                     color: colorScheme.onSurface.withAlpha(150),

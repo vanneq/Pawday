@@ -6,12 +6,14 @@ class FoodSelector extends StatelessWidget {
   final List<FoodModel> foods;
   final FoodModel? selectedFood;
   final ValueChanged<FoodModel> onFoodSelected;
+  final Map<FoodType, int> inventory;
 
   const FoodSelector({
     super.key,
     required this.foods,
     required this.selectedFood,
     required this.onFoodSelected,
+    required this.inventory,
   });
 
   @override
@@ -28,6 +30,7 @@ class FoodSelector extends StatelessWidget {
             return Padding(
               padding: EdgeInsets.only(right: 10.w),
               child: _FoodSelectorCard(
+                inventory: inventory,
                 food: food,
                 isSelected: isSelected,
                 onTap: () => onFoodSelected(food),
@@ -44,17 +47,19 @@ class _FoodSelectorCard extends StatelessWidget {
   final FoodModel food;
   final bool isSelected;
   final VoidCallback onTap;
+  final Map<FoodType, int> inventory;
 
   const _FoodSelectorCard({
     required this.food,
     required this.isSelected,
     required this.onTap,
+    required this.inventory,
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
+    final quantity = inventory[food.type] ?? 0;
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -81,7 +86,7 @@ class _FoodSelectorCard extends StatelessWidget {
                   color: colorScheme.primary.withAlpha(50),
                 ),
                 child: Text(
-                  '2',
+                  quantity.toString(),
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontSize: 18.sp,
                     color: colorScheme.primary,
