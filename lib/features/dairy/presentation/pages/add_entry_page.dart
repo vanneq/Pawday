@@ -16,6 +16,8 @@ import 'package:kotik/core/widgets/primary_button.dart';
 import 'package:kotik/core/widgets/snackbar.dart';
 import 'package:kotik/features/dairy/presentation/cubit/diary_cubit.dart';
 import 'package:kotik/features/dairy/presentation/cubit/diary_state.dart';
+import 'package:kotik/features/dairy/presentation/widgets/food_reward_dialog.dart';
+import 'package:path_provider/path_provider.dart';
 
 class AddEntryPage extends StatelessWidget {
   final String catId;
@@ -64,9 +66,13 @@ class _AddEntryViewState extends State<AddEntryView> {
     return BlocListener<DiaryCubit, DiaryState>(
       listener: (context, state) {
         if (state is DiaryAdded) {
-          showSuccessSnackbar(context, 'Запись успешно добавлена 🐾');
-
-          context.go('/main');
+          showDialog<void>(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) => FoodRewardDialog(gettingFood: state.gettingFood),
+          ).then((_) {
+            if (context.mounted) context.go('/main');
+          });
         }
 
         if (state is DiaryError) {
@@ -128,7 +134,9 @@ class _AddEntryViewState extends State<AddEntryView> {
                                 PrimaryButton(
                                   text: 'Создать запись',
                                   isLoading: isLoading,
-                                  isActive: controller.text.trim().isNotEmpty,
+                                  isActive:
+                                      controller.text.trim().isNotEmpty &&
+                                      _selectedImageFile != null,
                                   onPressed: () async {
                                     if (isLoading) return;
 
@@ -139,13 +147,20 @@ class _AddEntryViewState extends State<AddEntryView> {
                                       );
                                       return;
                                     }
-
+                                    final imageFile = _selectedImageFile;
+                                    if (imageFile == null) {
+                                      showErrorSnackbar(
+                                        context,
+                                        'Добавьте фото',
+                                      );
+                                      return;
+                                    }
                                     final newDiary = DiaryParams(
                                       catId: widget.catId,
                                       createdAt: _selectedDate,
                                       description: controller.text.trim(),
                                       mood: _selectedMood,
-                                      imageFile: _selectedImageFile,
+                                      imageFile: imageFile,
                                     );
                                     context.read<DiaryCubit>().addEntry(
                                       newDiary,
@@ -186,8 +201,28 @@ class _AddEntryViewState extends State<AddEntryView> {
 
       if (pickedImage == null || !mounted) return;
 
+      final sourceFile = File(pickedImage.path);
+      if (!await sourceFile.exists()) {
+        throw FileSystemException('Выбранное фото не найдено', sourceFile.path);
+      }
+
+      final appDirectory = await getApplicationDocumentsDirectory();
+      final photoDirectory = Directory('${appDirectory.path}/diary_photos');
+      await photoDirectory.create(recursive: true);
+
+      final fileName =
+          '${DateTime.now().microsecondsSinceEpoch}_${pickedImage.name}';
+      final savedImage = await sourceFile.copy(
+        '${photoDirectory.path}/$fileName',
+      );
+
+      if (!mounted) {
+        await savedImage.delete();
+        return;
+      }
+
       setState(() {
-        _selectedImageFile = File(pickedImage.path);
+        _selectedImageFile = savedImage;
       });
     } catch (error, stackTrace) {
       debugPrint('Pick image error: $error');

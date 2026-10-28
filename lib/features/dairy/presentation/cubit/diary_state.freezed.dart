@@ -140,7 +140,7 @@ return selected(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<DiaryModel> diaryEntries)?  loadedData,TResult Function( String error)?  error,TResult Function()?  adding,TResult Function()?  added,TResult Function()?  editing,TResult Function()?  edited,TResult Function()?  selected,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( List<DiaryModel> diaryEntries)?  loadedData,TResult Function( String error)?  error,TResult Function()?  adding,TResult Function( List<FoodType> gettingFood)?  added,TResult Function()?  editing,TResult Function()?  edited,TResult Function()?  selected,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case DiaryInitial() when initial != null:
 return initial();case DiaryLoading() when loading != null:
@@ -148,7 +148,7 @@ return loading();case DiaryLoadedData() when loadedData != null:
 return loadedData(_that.diaryEntries);case DiaryError() when error != null:
 return error(_that.error);case DiaryAdding() when adding != null:
 return adding();case DiaryAdded() when added != null:
-return added();case DiaryEditing() when editing != null:
+return added(_that.gettingFood);case DiaryEditing() when editing != null:
 return editing();case DiaryEdited() when edited != null:
 return edited();case DiarySelected() when selected != null:
 return selected();case _:
@@ -169,7 +169,7 @@ return selected();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<DiaryModel> diaryEntries)  loadedData,required TResult Function( String error)  error,required TResult Function()  adding,required TResult Function()  added,required TResult Function()  editing,required TResult Function()  edited,required TResult Function()  selected,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( List<DiaryModel> diaryEntries)  loadedData,required TResult Function( String error)  error,required TResult Function()  adding,required TResult Function( List<FoodType> gettingFood)  added,required TResult Function()  editing,required TResult Function()  edited,required TResult Function()  selected,}) {final _that = this;
 switch (_that) {
 case DiaryInitial():
 return initial();case DiaryLoading():
@@ -177,7 +177,7 @@ return loading();case DiaryLoadedData():
 return loadedData(_that.diaryEntries);case DiaryError():
 return error(_that.error);case DiaryAdding():
 return adding();case DiaryAdded():
-return added();case DiaryEditing():
+return added(_that.gettingFood);case DiaryEditing():
 return editing();case DiaryEdited():
 return edited();case DiarySelected():
 return selected();}
@@ -194,7 +194,7 @@ return selected();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<DiaryModel> diaryEntries)?  loadedData,TResult? Function( String error)?  error,TResult? Function()?  adding,TResult? Function()?  added,TResult? Function()?  editing,TResult? Function()?  edited,TResult? Function()?  selected,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( List<DiaryModel> diaryEntries)?  loadedData,TResult? Function( String error)?  error,TResult? Function()?  adding,TResult? Function( List<FoodType> gettingFood)?  added,TResult? Function()?  editing,TResult? Function()?  edited,TResult? Function()?  selected,}) {final _that = this;
 switch (_that) {
 case DiaryInitial() when initial != null:
 return initial();case DiaryLoading() when loading != null:
@@ -202,7 +202,7 @@ return loading();case DiaryLoadedData() when loadedData != null:
 return loadedData(_that.diaryEntries);case DiaryError() when error != null:
 return error(_that.error);case DiaryAdding() when adding != null:
 return adding();case DiaryAdded() when added != null:
-return added();case DiaryEditing() when editing != null:
+return added(_that.gettingFood);case DiaryEditing() when editing != null:
 return editing();case DiaryEdited() when edited != null:
 return edited();case DiarySelected() when selected != null:
 return selected();case _:
@@ -451,33 +451,73 @@ String toString() {
 
 
 class DiaryAdded implements DiaryState {
-  const DiaryAdded();
+  const DiaryAdded(final  List<FoodType> gettingFood): _gettingFood = gettingFood;
   
 
+ final  List<FoodType> _gettingFood;
+ List<FoodType> get gettingFood {
+  if (_gettingFood is EqualUnmodifiableListView) return _gettingFood;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_gettingFood);
+}
 
 
+/// Create a copy of DiaryState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DiaryAddedCopyWith<DiaryAdded> get copyWith => _$DiaryAddedCopyWithImpl<DiaryAdded>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DiaryAdded);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DiaryAdded&&const DeepCollectionEquality().equals(other._gettingFood, _gettingFood));
 }
 
 
 @override
-int get hashCode => runtimeType.hashCode;
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_gettingFood));
 
 @override
 String toString() {
-  return 'DiaryState.added()';
+  return 'DiaryState.added(gettingFood: $gettingFood)';
 }
 
 
 }
 
+/// @nodoc
+abstract mixin class $DiaryAddedCopyWith<$Res> implements $DiaryStateCopyWith<$Res> {
+  factory $DiaryAddedCopyWith(DiaryAdded value, $Res Function(DiaryAdded) _then) = _$DiaryAddedCopyWithImpl;
+@useResult
+$Res call({
+ List<FoodType> gettingFood
+});
 
 
+
+
+}
+/// @nodoc
+class _$DiaryAddedCopyWithImpl<$Res>
+    implements $DiaryAddedCopyWith<$Res> {
+  _$DiaryAddedCopyWithImpl(this._self, this._then);
+
+  final DiaryAdded _self;
+  final $Res Function(DiaryAdded) _then;
+
+/// Create a copy of DiaryState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? gettingFood = null,}) {
+  return _then(DiaryAdded(
+null == gettingFood ? _self._gettingFood : gettingFood // ignore: cast_nullable_to_non_nullable
+as List<FoodType>,
+  ));
+}
+
+
+}
 
 /// @nodoc
 

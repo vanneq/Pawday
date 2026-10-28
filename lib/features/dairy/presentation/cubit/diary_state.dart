@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kotik/core/model/diary/diary_model.dart';
+import 'package:kotik/core/model/food/food_model.dart';
 
 part 'diary_state.freezed.dart';
 
@@ -13,7 +14,7 @@ sealed class DiaryState with _$DiaryState {
   const factory DiaryState.error(String error) = DiaryError;
 
   const factory DiaryState.adding() = DiaryAdding;
-  const factory DiaryState.added() = DiaryAdded;
+  const factory DiaryState.added(List<FoodType> gettingFood) = DiaryAdded;
 
   const factory DiaryState.editing() = DiaryEditing;
   const factory DiaryState.edited() = DiaryEdited;
