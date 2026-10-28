@@ -19,13 +19,20 @@ import 'package:kotik/features/dairy/domain/usecase/update_entry_usecase.dart';
 import 'package:kotik/features/dairy/domain/usecase/watch_entries_usecase.dart';
 import 'package:kotik/features/dairy/presentation/cubit/diary_cubit.dart';
 import 'package:kotik/features/main/data/datasource/cats_datasource.dart';
+import 'package:kotik/features/main/data/datasource/food_datasource.dart';
 import 'package:kotik/features/main/data/repository/cat_repository_impl.dart';
+import 'package:kotik/features/main/data/repository/food_repository_impl.dart';
 import 'package:kotik/features/main/domain/repository/cat_repository.dart';
+import 'package:kotik/features/main/domain/repository/food_repository.dart';
 import 'package:kotik/features/main/domain/usecase/add_cat_usecase.dart';
+import 'package:kotik/features/main/domain/usecase/add_food_usecase.dart';
 import 'package:kotik/features/main/domain/usecase/delete_cat_usecase.dart';
+import 'package:kotik/features/main/domain/usecase/feed_cat_usecase.dart';
 import 'package:kotik/features/main/domain/usecase/update_cat_usecase.dart';
 import 'package:kotik/features/main/domain/usecase/watch_cats_usecase.dart';
+import 'package:kotik/features/main/domain/usecase/watch_inventory_usecase.dart';
 import 'package:kotik/features/main/presentation/cubit/cats_cubit.dart';
+import 'package:kotik/features/main/presentation/cubit/food_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -42,12 +49,18 @@ Future<void> configureDependencies({
   getIt.registerLazySingleton<CatRepository>(
     () => CatRepositoryImpl(catsDatasource: getIt()),
   );
+
+  getIt.registerLazySingleton<FoodRepository>(
+    () => FoodRepositoryImpl(foodDatasource: getIt()),
+  );
   getIt.registerLazySingleton<DiaryRepository>(
     () => DiaryRepositoryImpl(datasource: getIt()),
   );
 
   getIt.registerLazySingleton(() => AuthDataSource(firebaseAuth: getIt()));
   getIt.registerLazySingleton(() => CatsDatasource(firestore: getIt()));
+  getIt.registerLazySingleton(() => FoodDatasource(firestore: getIt()));
+
   getIt.registerLazySingleton(
     () => DiaryDatasource(firestore: getIt(), storage: getIt()),
   );
@@ -69,6 +82,10 @@ Future<void> configureDependencies({
   getIt.registerLazySingleton(() => UpdateEntryUsecase(repository: getIt()));
   getIt.registerLazySingleton(() => DeleteEntryUsecase(repository: getIt()));
   getIt.registerLazySingleton(() => WatchEntriesUsecase(repository: getIt()));
+
+  getIt.registerLazySingleton(() => FeedCatUsecase(repository: getIt()));
+  getIt.registerLazySingleton(() => AddFoodUsecase(repository: getIt()));
+  getIt.registerLazySingleton(() => WatchInventoryUsecase(repository: getIt()));
 
   getIt.registerFactory(
     () => AuthCubit(
@@ -92,6 +109,16 @@ Future<void> configureDependencies({
       deleteEntryUsecase: getIt(),
       watchEntriesUsecase: getIt(),
       updateEntryUsecase: getIt(),
+      getCurrentUserUsecase: getIt(),
+      addFoodUsecase: getIt(),
+    ),
+  );
+
+  getIt.registerFactory(
+    () => FoodCubit(
+      feedCatUsecase: getIt(),
+      watchInventoryUsecase: getIt(),
+      addFoodUsecase: getIt(),
       getCurrentUserUsecase: getIt(),
     ),
   );
