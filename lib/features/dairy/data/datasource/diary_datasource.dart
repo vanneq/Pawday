@@ -15,28 +15,26 @@ class DiaryDatasource {
     String catId,
     DiaryParams diaryEntry,
   ) async {
-    String? imageUrl;
-    if (diaryEntry.imageFile != null) {
-      final compressedFile = await FlutterImageCompress.compressAndGetFile(
-        diaryEntry.imageFile!.path,
-        '${diaryEntry.imageFile!.parent.path}/compressed_${diaryEntry.imageFile!.uri.pathSegments.last}',
-        quality: 75,
-        minWidth: 1080,
-        minHeight: 1080,
-      );
-      final fileToUpload = compressedFile != null
-          ? File(compressedFile.path)
-          : diaryEntry.imageFile;
-      final ref = storage
-          .ref()
-          .child('diary')
-          .child(userId)
-          .child(diaryEntry.catId)
-          .child('${DateTime.now().millisecondsSinceEpoch}.jpg');
+    final compressedFile = await FlutterImageCompress.compressAndGetFile(
+      diaryEntry.imageFile.path,
+      '${diaryEntry.imageFile.parent.path}/compressed_${diaryEntry.imageFile.uri.pathSegments.last}',
+      quality: 75,
+      minWidth: 1080,
+      minHeight: 1080,
+    );
+    final fileToUpload = compressedFile != null
+        ? File(compressedFile.path)
+        : diaryEntry.imageFile;
+    final ref = storage
+        .ref()
+        .child('diary')
+        .child(userId)
+        .child(diaryEntry.catId)
+        .child('${DateTime.now().millisecondsSinceEpoch}.jpg');
 
-      await ref.putFile(fileToUpload!);
-      imageUrl = await ref.getDownloadURL();
-    }
+    await ref.putFile(fileToUpload);
+    final imageUrl = await ref.getDownloadURL();
+
     final catRef = firestore
         .collection('users')
         .doc(userId)
