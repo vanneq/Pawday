@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DiaryModel {
 
- String get id; String get catId; String? get imageUrl; DateTime get createdAt; String get description; CatMood get mood;
+ String get id; String get catId; String get imageUrl; DateTime get createdAt; String get description; CatMood get mood;
 /// Create a copy of DiaryModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $DiaryModelCopyWith<$Res>  {
   factory $DiaryModelCopyWith(DiaryModel value, $Res Function(DiaryModel) _then) = _$DiaryModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String catId, String? imageUrl, DateTime createdAt, String description, CatMood mood
+ String id, String catId, String imageUrl, DateTime createdAt, String description, CatMood mood
 });
 
 
@@ -65,12 +65,12 @@ class _$DiaryModelCopyWithImpl<$Res>
 
 /// Create a copy of DiaryModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? catId = null,Object? imageUrl = freezed,Object? createdAt = null,Object? description = null,Object? mood = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? catId = null,Object? imageUrl = null,Object? createdAt = null,Object? description = null,Object? mood = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,catId: null == catId ? _self.catId : catId // ignore: cast_nullable_to_non_nullable
-as String,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
-as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,imageUrl: null == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,mood: null == mood ? _self.mood : mood // ignore: cast_nullable_to_non_nullable
 as CatMood,
@@ -158,7 +158,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String catId,  String? imageUrl,  DateTime createdAt,  String description,  CatMood mood)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String catId,  String imageUrl,  DateTime createdAt,  String description,  CatMood mood)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DiaryModel() when $default != null:
 return $default(_that.id,_that.catId,_that.imageUrl,_that.createdAt,_that.description,_that.mood);case _:
@@ -179,7 +179,7 @@ return $default(_that.id,_that.catId,_that.imageUrl,_that.createdAt,_that.descri
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String catId,  String? imageUrl,  DateTime createdAt,  String description,  CatMood mood)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String catId,  String imageUrl,  DateTime createdAt,  String description,  CatMood mood)  $default,) {final _that = this;
 switch (_that) {
 case _DiaryModel():
 return $default(_that.id,_that.catId,_that.imageUrl,_that.createdAt,_that.description,_that.mood);case _:
@@ -199,7 +199,7 @@ return $default(_that.id,_that.catId,_that.imageUrl,_that.createdAt,_that.descri
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String catId,  String? imageUrl,  DateTime createdAt,  String description,  CatMood mood)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String catId,  String imageUrl,  DateTime createdAt,  String description,  CatMood mood)?  $default,) {final _that = this;
 switch (_that) {
 case _DiaryModel() when $default != null:
 return $default(_that.id,_that.catId,_that.imageUrl,_that.createdAt,_that.description,_that.mood);case _:
@@ -214,12 +214,12 @@ return $default(_that.id,_that.catId,_that.imageUrl,_that.createdAt,_that.descri
 @JsonSerializable()
 
 class _DiaryModel implements DiaryModel {
-  const _DiaryModel({required this.id, required this.catId, this.imageUrl, required this.createdAt, required this.description, required this.mood});
+  const _DiaryModel({required this.id, required this.catId, required this.imageUrl, required this.createdAt, required this.description, required this.mood});
   factory _DiaryModel.fromJson(Map<String, dynamic> json) => _$DiaryModelFromJson(json);
 
 @override final  String id;
 @override final  String catId;
-@override final  String? imageUrl;
+@override final  String imageUrl;
 @override final  DateTime createdAt;
 @override final  String description;
 @override final  CatMood mood;
@@ -257,7 +257,7 @@ abstract mixin class _$DiaryModelCopyWith<$Res> implements $DiaryModelCopyWith<$
   factory _$DiaryModelCopyWith(_DiaryModel value, $Res Function(_DiaryModel) _then) = __$DiaryModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String catId, String? imageUrl, DateTime createdAt, String description, CatMood mood
+ String id, String catId, String imageUrl, DateTime createdAt, String description, CatMood mood
 });
 
 
@@ -274,12 +274,12 @@ class __$DiaryModelCopyWithImpl<$Res>
 
 /// Create a copy of DiaryModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? catId = null,Object? imageUrl = freezed,Object? createdAt = null,Object? description = null,Object? mood = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? catId = null,Object? imageUrl = null,Object? createdAt = null,Object? description = null,Object? mood = null,}) {
   return _then(_DiaryModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,catId: null == catId ? _self.catId : catId // ignore: cast_nullable_to_non_nullable
-as String,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
-as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,imageUrl: null == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,mood: null == mood ? _self.mood : mood // ignore: cast_nullable_to_non_nullable
 as CatMood,

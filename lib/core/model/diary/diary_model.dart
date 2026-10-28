@@ -20,7 +20,7 @@ abstract class DiaryModel with _$DiaryModel {
   const factory DiaryModel({
     required String id,
     required String catId,
-    String? imageUrl,
+    required String imageUrl,
     required DateTime createdAt,
     required String description,
     required CatMood mood,
@@ -31,8 +31,7 @@ abstract class DiaryModel with _$DiaryModel {
 
 class DiaryParams {
   final String catId;
-  String? imageUrl;
-  File? imageFile;
+  final File imageFile;
   final DateTime createdAt;
   final String description;
   final CatMood mood;
@@ -41,7 +40,6 @@ class DiaryParams {
     required this.createdAt,
     required this.description,
     required this.mood,
-    this.imageUrl,
-    this.imageFile,
+    required this.imageFile,
   });
 }

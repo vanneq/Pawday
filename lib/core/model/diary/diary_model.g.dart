@@ -9,7 +9,7 @@ part of 'diary_model.dart';
 _DiaryModel _$DiaryModelFromJson(Map<String, dynamic> json) => _DiaryModel(
   id: json['id'] as String,
   catId: json['catId'] as String,
-  imageUrl: json['imageUrl'] as String?,
+  imageUrl: json['imageUrl'] as String,
   createdAt: DateTime.parse(json['createdAt'] as String),
   description: json['description'] as String,
   mood: $enumDecode(_$CatMoodEnumMap, json['mood']),
