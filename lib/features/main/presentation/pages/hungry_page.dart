@@ -9,6 +9,8 @@ import 'package:kotik/core/model/food/food_model.dart';
 import 'package:kotik/core/widgets/primary_button.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:kotik/core/widgets/snackbar.dart';
+import 'package:kotik/features/main/presentation/cubit/cats_cubit.dart';
+import 'package:kotik/features/main/presentation/cubit/cats_state.dart';
 import 'package:kotik/features/main/presentation/cubit/food_cubit.dart';
 import 'package:kotik/features/main/presentation/cubit/food_state.dart';
 import 'package:kotik/features/main/presentation/widgets/food_selector.dart';
@@ -100,7 +102,19 @@ class _HungryViewState extends State<HungryView> {
                                   ],
                                 ),
                                 SizedBox(height: 20.h),
-                                _HungryProfileRow(selectCat: widget.selectCat),
+                                BlocBuilder<CatsCubit, CatsState>(
+                                  builder: (context, state) {
+                                    final cat = state is CatsLoadedData
+                                        ? state.cats.firstWhere(
+                                            (cat) =>
+                                                cat.id == widget.selectCat.id,
+                                            orElse: () => widget.selectCat,
+                                          )
+                                        : widget.selectCat;
+
+                                    return _HungryProfileRow(selectCat: cat);
+                                  },
+                                ),
                                 SizedBox(height: 14.h),
                                 _NewEntryFoodCard(
                                   catName: widget.selectCat.name,
@@ -179,9 +193,10 @@ class _MyFoodList extends StatelessWidget {
             final food = selectedFood;
             if (food == null) return;
 
-            final wasFed = await context
-                .read<FoodCubit>()
-                .feedCat(catId, food.type);
+            final wasFed = await context.read<FoodCubit>().feedCat(
+              catId,
+              food.type,
+            );
             if (!context.mounted || !wasFed) return;
 
             await showGeneralDialog<void>(
@@ -195,18 +210,18 @@ class _MyFoodList extends StatelessWidget {
               },
               transitionBuilder:
                   (context, animation, secondaryAnimation, child) {
-                final curvedAnimation = CurvedAnimation(
-                  parent: animation,
-                  curve: Curves.elasticOut,
-                );
-                return FadeTransition(
-                  opacity: animation,
-                  child: ScaleTransition(
-                    scale: curvedAnimation,
-                    child: child,
-                  ),
-                );
-              },
+                    final curvedAnimation = CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.elasticOut,
+                    );
+                    return FadeTransition(
+                      opacity: animation,
+                      child: ScaleTransition(
+                        scale: curvedAnimation,
+                        child: child,
+                      ),
+                    );
+                  },
             );
           },
           isActive: selectedFoodQuantity > 0,
@@ -262,10 +277,8 @@ class _FeedSuccessDialog extends StatelessWidget {
                   tween: Tween(begin: -0.12, end: 0),
                   duration: const Duration(milliseconds: 650),
                   curve: Curves.elasticOut,
-                  builder: (context, angle, child) => Transform.rotate(
-                    angle: angle,
-                    child: child,
-                  ),
+                  builder: (context, angle, child) =>
+                      Transform.rotate(angle: angle, child: child),
                   child: Image.asset(
                     food.imagePath,
                     width: 94.w,
