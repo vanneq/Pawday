@@ -13,6 +13,7 @@ abstract class CatModel with _$CatModel {
     required String id,
     required String name,
     required DateTime createdAt,
+    required DateTime satietyUpdatedAt,
     required CatColoration color,
     required int hungry,
     required int dairyEntries,

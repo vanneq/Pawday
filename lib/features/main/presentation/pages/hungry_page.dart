@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:kotik/core/di/injection_container.dart';
 import 'package:kotik/core/extension/cat_extension.dart';
 import 'package:kotik/core/model/cat/cat_model.dart';
+import 'package:kotik/features/main/domain/utils/satiety_calculator.dart';
 import 'package:kotik/core/model/food/food_model.dart';
 import 'package:kotik/core/widgets/primary_button.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -46,8 +49,32 @@ class HungryView extends StatefulWidget {
   State<HungryView> createState() => _HungryViewState();
 }
 
-class _HungryViewState extends State<HungryView> {
+class _HungryViewState extends State<HungryView> with WidgetsBindingObserver {
   FoodModel? _selectedFood;
+  Timer? _satietyTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _satietyTimer = Timer.periodic(const Duration(minutes: 1), (_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
+  void dispose() {
+    _satietyTimer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   void _onFoodSelected(FoodModel food) {
     setState(() => _selectedFood = food);
@@ -115,6 +142,8 @@ class _HungryViewState extends State<HungryView> {
                                     return _HungryProfileRow(selectCat: cat);
                                   },
                                 ),
+                                SizedBox(height: 8.h),
+                                const _SatietyDecayNote(),
                                 SizedBox(height: 14.h),
                                 _NewEntryFoodCard(
                                   catName: widget.selectCat.name,
@@ -436,6 +465,10 @@ class _HungryProfileRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final satiety = calculateSatiety(
+      hungry: selectCat.hungry,
+      updatedAt: selectCat.satietyUpdatedAt,
+    );
     final isSmallScreen = MediaQuery.of(context).size.width < 380;
     final profileAvatarSize = isSmallScreen ? 110.w : 100.w;
     final profileCatScale = isSmallScreen ? 1.04 : 1.0;
@@ -478,7 +511,7 @@ class _HungryProfileRow extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '${selectCat.hungry.clamp(0, 100)}%',
+                      '$satiety%',
                       style: Theme.of(context).textTheme.titleLarge!.copyWith(
                         fontWeight: FontWeight.w800,
                         fontSize: 20,
@@ -491,7 +524,7 @@ class _HungryProfileRow extends StatelessWidget {
                 ),
                 SizedBox(height: 8.h),
                 LinearProgressIndicator(
-                  value: selectCat.hungry.clamp(0, 100) / 100,
+                  value: satiety / 100,
                   minHeight: 10.h,
                   borderRadius: BorderRadius.circular(8.r),
                   backgroundColor: Theme.of(
@@ -499,6 +532,51 @@ class _HungryProfileRow extends StatelessWidget {
                   ).colorScheme.outline.withAlpha(150),
                 ),
               ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SatietyDecayNote extends StatelessWidget {
+  const _SatietyDecayNote();
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+      decoration: BoxDecoration(
+        color: colorScheme.onPrimary.withAlpha(170),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: colorScheme.outline.withAlpha(100)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 34.w,
+            height: 34.w,
+            decoration: BoxDecoration(
+              color: colorScheme.primary.withAlpha(28),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.schedule_rounded,
+              color: colorScheme.primary,
+              size: 20.sp,
+            ),
+          ),
+          SizedBox(width: 10.w),
+          Expanded(
+            child: Text(
+              'Сытость убывает на 5% каждый час. Не забывайте кормить котика — что будет при 0%, лучше не проверять 🙀',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: colorScheme.onSurface.withAlpha(180),
+              ),
             ),
           ),
         ],

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +10,7 @@ import 'package:kotik/core/di/injection_container.dart';
 import 'package:kotik/core/extension/cat_extension.dart';
 
 import 'package:kotik/core/model/cat/cat_model.dart';
+import 'package:kotik/features/main/domain/utils/satiety_calculator.dart';
 import 'package:kotik/core/widgets/snackbar.dart';
 import 'package:kotik/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:kotik/features/auth/presentation/cubit/auth_state.dart';
@@ -93,12 +96,47 @@ class MainView extends StatelessWidget {
   }
 }
 
-class _HungryBox extends StatelessWidget {
+class _HungryBox extends StatefulWidget {
   final CatModel cat;
   const _HungryBox({required this.cat});
 
   @override
+  State<_HungryBox> createState() => _HungryBoxState();
+}
+
+class _HungryBoxState extends State<_HungryBox> with WidgetsBindingObserver {
+  Timer? _satietyTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _satietyTimer = Timer.periodic(const Duration(minutes: 1), (_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
+  void dispose() {
+    _satietyTimer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final satiety = calculateSatiety(
+      hungry: widget.cat.hungry,
+      updatedAt: widget.cat.satietyUpdatedAt,
+    );
+
     return Row(
       children: [
         Container(
@@ -120,7 +158,7 @@ class _HungryBox extends StatelessWidget {
           ),
         ),
         Text(
-          "${cat.hungry.toString()}%",
+          '$satiety%',
           style: Theme.of(context).textTheme.titleLarge!.copyWith(
             fontWeight: FontWeight.w800,
             color: Theme.of(context).colorScheme.primary,

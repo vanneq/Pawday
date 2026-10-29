@@ -17,6 +17,7 @@ class CatsDatasource {
       id: docRef.id,
       name: cat.name,
       createdAt: cat.createdAt,
+      satietyUpdatedAt: DateTime.now().toUtc(),
       color: cat.color,
 
       dairyEntries: cat.dairyEntries,
@@ -33,9 +34,15 @@ class CatsDatasource {
         .collection('cats')
         .snapshots()
         .map((snapshot) {
-          return snapshot.docs
-              .map((cat) => CatModel.fromJson(cat.data()))
-              .toList();
+          return snapshot.docs.map((cat) {
+            final data = Map<String, dynamic>.from(cat.data());
+
+            data.putIfAbsent(
+              'satietyUpdatedAt',
+              () => DateTime.now().toUtc().toIso8601String(),
+            );
+            return CatModel.fromJson(data);
+          }).toList();
         });
   }
 

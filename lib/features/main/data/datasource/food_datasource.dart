@@ -76,12 +76,28 @@ class FoodDatasource {
       final currentSatiety =
           (catSnapshot.data()?['hungry'] as num?)?.toInt() ?? 0;
 
-      final newSatiety = (currentSatiety + food.satietyPercent)
+      final catData = catSnapshot.data()!;
+      final now = DateTime.now().toUtc();
+      final storedUpdatedAt = catData['satietyUpdatedAt'];
+      final lastUpdatedAt = storedUpdatedAt is String
+          ? DateTime.tryParse(storedUpdatedAt)?.toUtc() ?? now
+          : now;
+      final elapsed = now.difference(lastUpdatedAt);
+      final elapsedHours = elapsed.isNegative ? 0 : elapsed.inHours;
+      final decayedSatiety = (currentSatiety - elapsedHours * 5)
+          .clamp(0, 100)
+          .toInt();
+      final updatedAt = lastUpdatedAt.add(Duration(hours: elapsedHours));
+
+      final newSatiety = (decayedSatiety + food.satietyPercent)
           .clamp(0, 100)
           .toInt();
 
       transaction.update(inventoryRef, {'quantity': quantity - 1});
-      transaction.update(catRef, {'hungry': newSatiety});
+      transaction.update(catRef, {
+        'hungry': newSatiety,
+        'satietyUpdatedAt': updatedAt.toIso8601String(),
+      });
     });
   }
 }
