@@ -343,24 +343,22 @@ class CatList extends StatelessWidget {
 class SettingsColumn extends StatelessWidget {
   static final items = [
     SettingItemsData(
-      title: 'Аккаунт',
-      onTap: () {},
-      icon: CupertinoIcons.person,
-    ),
-    SettingItemsData(
       title: 'Уведомления',
       onTap: () {},
       icon: CupertinoIcons.bell,
+      route: '/profile/notifications',
     ),
     SettingItemsData(
       title: 'Поддержка',
       onTap: () {},
       icon: CupertinoIcons.heart,
+      route: '/profile/support',
     ),
     SettingItemsData(
       title: 'О приложении',
       onTap: () {},
       icon: CupertinoIcons.doc,
+      route: '/profile/about',
     ),
   ];
   const SettingsColumn({super.key});
@@ -381,7 +379,9 @@ class SettingsColumn extends StatelessWidget {
           final item = items[index];
           return SettingsItem(
             title: item.title,
-            onTap: item.onTap,
+            onTap: item.route == null
+                ? item.onTap
+                : () => context.push(item.route!),
             icon: item.icon,
           );
         },
@@ -514,10 +514,12 @@ class SettingItemsData {
   final String title;
   final VoidCallback onTap;
   final IconData icon;
+  final String? route;
 
   SettingItemsData({
     required this.title,
     required this.onTap,
     required this.icon,
+    this.route,
   });
 }

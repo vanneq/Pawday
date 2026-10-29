@@ -14,8 +14,11 @@ import 'package:kotik/features/dairy/presentation/pages/edit_entry_page.dart';
 import 'package:kotik/features/main/presentation/pages/hungry_page.dart';
 import 'package:kotik/features/main/presentation/pages/main_page.dart';
 import 'package:kotik/features/profile/presentation/pages/add_cat_page.dart';
+import 'package:kotik/features/profile/presentation/pages/about_page.dart';
 import 'package:kotik/features/profile/presentation/pages/edit_cat_page.dart';
+import 'package:kotik/features/profile/presentation/pages/notifications_page.dart';
 import 'package:kotik/features/profile/presentation/pages/profile_page.dart';
+import 'package:kotik/features/profile/presentation/pages/support_page.dart';
 import 'package:kotik/features/splash/presentation/splash_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -92,6 +95,21 @@ final router = Provider<GoRouter>((ref) {
         path: '/profile/add_cat',
         pageBuilder: (context, state) =>
             const NoTransitionPage(child: AddCatPage()),
+      ),
+      GoRoute(
+        path: '/profile/about',
+        pageBuilder: (context, state) =>
+            const NoTransitionPage(child: AboutPage()),
+      ),
+      GoRoute(
+        path: '/profile/support',
+        pageBuilder: (context, state) =>
+            const NoTransitionPage(child: SupportPage()),
+      ),
+      GoRoute(
+        path: '/profile/notifications',
+        pageBuilder: (context, state) =>
+            const NoTransitionPage(child: NotificationsPage()),
       ),
       GoRoute(
         path: '/profile/edit_cat',
