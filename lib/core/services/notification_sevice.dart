@@ -1,5 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
@@ -17,18 +18,52 @@ class NotificationService {
       );
 
   static Future<void> initialize() async {
-    await _requestPermission();
-    await FirebaseMessaging.instance.subscribeToTopic('all_users');
     await _setupLocalNotifications();
-
     await _setupForegroundMessages();
-
-    final token = await _messaging.getToken();
-    debugPrint('FCM token: $token');
   }
 
-  static Future<void> _requestPermission() async {
-    await _messaging.requestPermission(alert: true, badge: true, sound: true);
+  static Future<bool> areNotificationsEnabled() async {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) return false;
+
+    final userSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .get();
+    if (userSnapshot.data()?['notificationsEnabled'] != true) return false;
+
+    final settings = await _messaging.getNotificationSettings();
+    return settings.authorizationStatus == AuthorizationStatus.authorized ||
+        settings.authorizationStatus == AuthorizationStatus.provisional;
+  }
+
+  static Future<bool> setNotificationsEnabled(bool enabled) async {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) return false;
+
+    final userRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId);
+
+    if (enabled) {
+      final settings = await _messaging.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+      final isAllowed =
+          settings.authorizationStatus == AuthorizationStatus.authorized ||
+          settings.authorizationStatus == AuthorizationStatus.provisional;
+      if (!isAllowed) return false;
+
+      await _messaging.subscribeToTopic('all_users');
+      await userRef.set({'notificationsEnabled': true}, SetOptions(merge: true));
+      return true;
+    }
+
+    await _messaging.unsubscribeFromTopic('all_users');
+    await userRef.set({'notificationsEnabled': false}, SetOptions(merge: true));
+    return false;
   }
 
   static Future<void> _setupLocalNotifications() async {
